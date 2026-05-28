@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICSAI 2026 — Publications</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --sky:#3a86d4;
+      --sky-light:#5fa3e0;
+      --sky-pale:#daeaf8;
+      --gold:#e8960e;
+      --gold-pale:#fef3dc;
+      --green:#16a34a;
+      --green-pale:#dcfce7;
+      --purple:#7c3aed;
+      --purple-pale:#ede9fe;
+      --white:#ffffff;
+      --canvas:#f7f9fc;
+      --text:#1a2638;
+      --muted:#5a6a80;
+      --line:#dde4ee;
+      --shadow-sm:0 1px 4px rgba(30,50,90,.06),0 2px 10px rgba(30,50,90,.05);
+      --shadow-md:0 4px 18px rgba(30,50,90,.09);
+      --radius:10px;
+      --radius-lg:14px;
+    }
+
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:var(--white);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    /* ================= NAVBAR ================= */
+
+    nav{
+      position:sticky;
+      top:0;
+      z-index:999;
+      height:68px;
+      background:var(--white);
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 max(28px, calc((100% - 1080px) / 2 + 28px));
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+    }
+
+    .logo-mark{
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      background:linear-gradient(135deg,#3a86d4 0%,#72b8f5 60%,#a8d4fa 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .logo-text{
+      font-size:17px;
+      font-weight:600;
+      color:var(--text);
+    }
+
+    .nav-links{
+      list-style:none;
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .nav-links > li{
+      position:relative;
+    }
+
+    .nav-links > li > a{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:500;
+      color:var(--muted);
+      padding:8px 12px;
+      border-radius:6px;
+      transition:.2s;
+      white-space:nowrap;
+    }
+
+    .nav-links > li > a:hover{
+      background:var(--canvas);
+      color:var(--text);
+    }
+
+    .nav-links > li > a.active{
+      color:var(--sky);
+    }
+
+    .chev{
+      width:14px;
+      height:14px;
+      stroke:currentColor;
+      fill:none;
+      stroke-width:2;
+      transition:.2s;
+    }
+
+    .nav-links > li:hover .chev{
+      transform:rotate(180deg);
+    }
+
+    /* ===== DROPDOWN FIX ===== */
+
+    .dropdown{
+      opacity:0;
+      visibility:hidden;
+      transform:translateY(10px);
+      transition:all .25s ease;
+      pointer-events:none;
+
+      position:absolute;
+      top:100%;
+      left:0;
+      
+
+      min-width:210px;
+      background:var(--white);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-md);
+      padding:6px;
+      z-index:100;
+    }
+
+    /* THIS FIXES THE ISSUE */
+    .nav-links > li:hover .dropdown,
+    .nav-links > li:focus-within .dropdown{
+      opacity:1;
+      visibility:visible;
+      transform:translateY(0);
+      pointer-events:auto;
+    }
+
+    .dropdown a{
+      display:block;
+      padding:10px 14px;
+      font-size:13.5px;
+      text-decoration:none;
+      color:var(--muted);
+      border-radius:6px;
+      transition:.2s;
+    }
+
+    .dropdown a:hover{
+      background:var(--canvas);
+      color:var(--text);
+    }
+
+    /* ================= HERO ================= */
+
+    .hero{
+      background:linear-gradient(160deg,#e8f2fd 0%,#f0f7ff 55%,#f7fafd 100%);
+      padding:90px 28px;
+      text-align:center;
+    }
+
+    .hero-inner{
+      max-width:780px;
+      margin:auto;
+    }
+
+    .hero-eyebrow{
+      display:inline-block;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:8px 18px;
+      border-radius:50px;
+      font-size:13px;
+      color:var(--sky);
+      margin-bottom:24px;
+    }
+
+    .hero h1{
+      font-family:'DM Serif Display',serif;
+      font-size:56px;
+      font-weight:400;
+      margin-bottom:20px;
+    }
+
+    .hero h1 em{
+      color:var(--sky);
+      font-style:italic;
+    }
+
+    .hero-sub{
+      font-size:16px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+
+    /* ================= SECTION ================= */
+
+    .section{
+      padding:72px 0;
+    }
+
+    .container{
+      max-width:1080px;
+      margin:auto;
+      padding:0 28px;
+    }
+
+    .section-label{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      color:var(--sky);
+      margin-bottom:10px;
+      font-weight:600;
+    }
+
+    .section-header h2{
+      font-family:'DM Serif Display',serif;
+      font-size:34px;
+      font-weight:400;
+      margin-bottom:36px;
+    }
+
+    /* ================= NOTICE ================= */
+
+    .indexing-notice{
+      border-left:4px solid var(--gold);
+      background:var(--gold-pale);
+      padding:20px;
+      border-radius:0 10px 10px 0;
+      margin-bottom:40px;
+    }
+
+    .indexing-notice p{
+      line-height:1.8;
+      color:#7a5010;
+      font-size:14px;
+    }
+
+    /* ================= PUBLICATION CARDS ================= */
+
+    .pub-list{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+
+    .pub-card{
+      display:flex;
+      gap:24px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-left:4px solid var(--sky);
+      border-radius:0 14px 14px 0;
+      padding:28px;
+      box-shadow:var(--shadow-sm);
+      transition:.25s;
+    }
+
+    .pub-card:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--shadow-md);
+    }
+
+    .pub-year-badge{
+      width:60px;
+      height:60px;
+      border-radius:10px;
+      background:var(--sky-pale);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    .yr{
+      font-size:18px;
+      font-weight:700;
+      color:var(--sky);
+    }
+
+    .conf{
+      font-size:10px;
+      color:var(--sky-light);
+      text-transform:uppercase;
+    }
+
+    .pub-body h3{
+      margin-bottom:10px;
+      font-size:18px;
+    }
+
+    .pub-body p{
+      color:var(--muted);
+      line-height:1.8;
+      margin-bottom:14px;
+      font-size:14px;
+    }
+
+    /* ================= BADGES ================= */
+
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .badge{
+      padding:6px 12px;
+      border-radius:50px;
+      font-size:12px;
+      font-weight:600;
+    }
+
+    .badge-ieee{
+      background:var(--sky-pale);
+      color:var(--sky);
+    }
+
+    .badge-scopus{
+      background:var(--purple-pale);
+      color:var(--purple);
+    }
+
+    .badge-ei{
+      background:var(--green-pale);
+      color:var(--green);
+    }
+
+    /* ================= FOOTER ================= */
+
+    footer{
+      background:var(--canvas);
+      border-top:1px solid var(--line);
+      padding:36px;
+      text-align:center;
+      margin-top:60px;
+    }
+
+    footer p{
+      color:var(--muted);
+      line-height:1.8;
+      font-size:14px;
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media(max-width:1000px){
+
+      .nav-links{
+        display:none;
+      }
+
+      nav{
+        padding:0 20px;
+      }
+
+    }
+
+    @media(max-width:640px){
+
+      .pub-card{
+        flex-direction:column;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+  <a class="logo" href="#">
+    <div class="logo-mark">IC</div>
+    <span class="logo-text">ICSAI 2026</span>
+  </a>
+
+  <ul class="nav-links">
+
+    <li><a href="conference-website.html">Home</a></li>
+
+    <li>
+      <a href="#">
+        Committee
+        <svg class="chev" viewBox="0 0 24 24">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </a>
+
+      <div class="dropdown">
+        <a href="organizing-committee.html">Organizing Committee</a>
+      </div>
+    </li>
+
+    <li><a href="speakers.html">Speakers</a></li>
+
+    <li><a href="call_for_papers.html">Call For Papers</a></li>
+
+    <!-- FIXED SUBMISSION DROPDOWN -->
+
+    <li>
+      <a href="#">
+        Submission
+        <svg class="chev" viewBox="0 0 24 24">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </a>
+
+      <div class="dropdown">
+        <a href="submission.html">Submit Paper</a>
+        <a href="download.html">Download Template</a>
+        <a href="editorial_policy.html">Editorial Policy</a>
+        <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
+      </div>
+    </li>
+
+    <li>
+      <a href="#">
+        Registration
+        <svg class="chev" viewBox="0 0 24 24">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </a>
+
+      <div class="dropdown">
+        <a href="register_now.html">Register Now</a>
+        <a href="program_schedule.html">Program Schedule</a>
+      </div>
+    </li>
+
+    <li><a href="publication.html" class="active">Publication</a></li>
+
+    <li><a href="contact.html">Contact</a></li>
+
+    <li><a href="history.html">History</a></li>
+
+  </ul>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-inner">
+
+    <div class="hero-eyebrow">
+      ICSAI 2026 · Nanjing, China · June 18–20, 2026
+    </div>
+
+    <h1>
+      Conference <em>Publications</em>
+    </h1>
+
+    <p class="hero-sub">
+      International Conference on Smart Artificial Intelligence & Innovation —
+      connecting researchers, engineers, and pioneers worldwide.
+    </p>
+
+  </div>
+
+</section>
+
+<!-- PUBLICATIONS -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="section-label">
+      Proceedings Archive
+    </div>
+
+    <div class="section-header">
+      <h2>ICSAI Publication Record</h2>
+    </div>
+
+    <div class="indexing-notice">
+      <p>
+        <strong>Indexing policy:</strong>
+        All accepted papers are peer-reviewed by the international technical committee and submitted for indexing in IEEE Xplore, Scopus, and EI Compendex upon acceptance.
+      </p>
+    </div>
+
+    <div class="pub-list">
+
+      <div class="pub-card">
+
+        <div class="pub-year-badge">
+          <span class="yr">2026</span>
+          <span class="conf">ICSAI</span>
+        </div>
+
+        <div class="pub-body">
+
+          <h3>ICSAI 2026 Publication</h3>
+
+          <p>
+            Accepted papers will be published in IEEE Xplore and submitted for Scopus indexing.
+          </p>
+
+          <div class="badges">
+            <span class="badge badge-ieee">IEEE Xplore</span>
+            <span class="badge badge-scopus">Scopus</span>
+            <span class="badge badge-ei">EI Compendex</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+  <p>
+    © 2026 International Conference on Smart Artificial Intelligence & Innovation
+  </p>
+
+  <p>
+    ICSAI 2026 · Nanjing, China · June 18–20, 2026
+  </p>
+
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICSAI 2026 - Download Template</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    :root {
+      --sky:     #3b82f6;
+      --sky-lt:  #dbeafe;
+      --sky-md:  #93c5fd;
+      --gold:    #f59e0b;
+      --gold-lt: #fef3c7;
+      --white:   #ffffff;
+      --canvas:  #f7fafd;
+      --line:    #e2eaf4;
+      --text:    #1e293b;
+      --muted:   #64748b;
+      --shadow-sm: 0 1px 4px rgba(30,58,120,.06), 0 2px 12px rgba(30,58,120,.05);
+      --shadow-md: 0 4px 24px rgba(30,58,120,.09);
+      --radius:  14px;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      height: 68px;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 clamp(20px, 5vw, 70px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #60aff5 0%, #3b82f6 50%, #93c5fd 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: .5px;
+      box-shadow: 0 2px 10px rgba(59,130,246,.30);
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.3px;
+    }
+
+    .logo-text span {
+      color: var(--sky);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 4px;
+    }
+
+    .nav-links li { position: relative; }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 8px;
+      display: block;
+      transition: color .2s, background .2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--sky);
+      background: var(--sky-lt);
+    }
+
+    .nav-links a.active {
+      color: var(--sky);
+      background: var(--sky-lt);
+    }
+
+    /* dropdown */
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 210px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(6px);
+      transition: .25s;
+    }
+
+    .dropdown a {
+      color: var(--text);
+      font-size: 13.5px;
+      padding: 11px 16px;
+      border-radius: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dropdown a:last-child { border-bottom: none; }
+
+    .dropdown a:hover {
+      background: var(--canvas);
+      color: var(--sky);
+      padding-left: 22px;
+    }
+
+    .nav-links li:hover .dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 320px;
+      background: linear-gradient(160deg, #e8f2fd 0%, #f0f7ff 55%, #f7fafd 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 28px;
+      overflow: hidden;
+    }
+
+    /* dot-grid overlay */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, #93c5fd 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: .22;
+      pointer-events: none;
+    }
+
+    /* radial glow blob */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(147,197,253,.38) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 18px;
+      border-radius: 50px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid var(--line);
+      color: var(--sky);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--sky);
+      display: inline-block;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -.5px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--sky);
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── SECTIONS ── */
+    .section-white { background: var(--white); }
+    .section-canvas { background: var(--canvas); }
+
+    section.main-section {
+      padding: 72px 0;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .section-eyebrow {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: -.3px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* ── TEMPLATE CARDS ── */
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .template-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 36px 30px;
+      transition: transform .3s, box-shadow .3s;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .template-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .template-card-accent {
+      position: absolute;
+      top: 0; left: 28px;
+      width: 48px; height: 3px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(90deg, var(--sky), var(--sky-md));
+    }
+
+    .template-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .card-type-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 8px;
+    }
+
+    .template-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .template-card p {
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 26px;
+      font-size: 14.5px;
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+      background: var(--sky);
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background .2s, transform .2s, box-shadow .2s;
+      letter-spacing: .1px;
+    }
+
+    .download-btn svg {
+      width: 15px; height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .download-btn:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(59,130,246,.3);
+    }
+
+    .file-badge {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .file-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--sky-md);
+      display: inline-block;
+    }
+
+    /* ── NOTICE BOX ── */
+    .notice-box {
+      margin-top: 52px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .notice-box-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .notice-icon {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: var(--gold-lt);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    .notice-box h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .notice-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .notice-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.7;
+    }
+
+    .notice-list li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+
+    /* ── INFO BAR ── */
+    .info-bar {
+      border-left: 4px solid var(--sky);
+      background: linear-gradient(90deg, #eff6ff, transparent);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 20px;
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .info-bar svg {
+      width: 16px; height: 16px;
+      stroke: var(--sky);
+      fill: none;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #f1f6fc;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      padding: 36px 28px;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.9;
+    }
+
+    footer strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .template-grid { grid-template-columns: 1fr; }
+      .notice-box { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="conference-website.html" class="logo">
+      <div class="logo-mark">IC</div>
+      <span class="logo-text">ICSAI <span>2026</span></span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="conference-website.html">Home</a></li>
+
+      <li>
+        <a href="#">Committee ▾</a>
+        <div class="dropdown">
+          <a href="organizing-committee.html">Organizing Committee</a>
+          <a href="program-committee.html">Program Committee</a>
+        </div>
+      </li>
+
+      <li><a href="speaker.html">Speakers</a></li>
+      <li><a href="call-for-paper.html">Call For Papers</a></li>
+
+      <li>
+        <a href="#" class="active">Submission ▾</a>
+        <div class="dropdown">
+          <a href="submission.html">Submit Paper</a>
+          <a href="download.html" class="active">Download Template</a>
+          <a href="editorial_policy.html">Editorial Policy</a>
+          <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
+        </div>
+      </li>
+
+      <li><a href="publication.html">Publication</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">Author Resources &nbsp;·&nbsp; IEEE Format &nbsp;·&nbsp; ICSAI 2026</div>
+      <h1>Download <em>Templates</em></h1>
+      <p>
+        Prepare your manuscript using the official conference templates before submission.
+        Choose the format that matches your authoring environment.
+      </p>
+    </div>
+  </div>
+
+  <!-- TEMPLATE SECTION -->
+  <section class="main-section section-white">
+    <div class="container">
+
+      <div class="section-header">
+        <div class="section-eyebrow">Author Resources</div>
+        <h2>Conference Templates</h2>
+        <p>Official manuscript templates for IEEE-formatted paper preparation</p>
+      </div>
+
+      <div class="info-bar">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        All templates follow IEEE conference formatting standards. Use the same template version throughout your manuscript.
+      </div>
+
+      <div class="template-grid">
+
+        <!-- WORD -->
+        <div class="template-card">
+          <div class="template-card-accent"></div>
+          <div class="template-icon">📄</div>
+          <div class="card-type-tag">Microsoft Word</div>
+          <h3>Word Template</h3>
+          <p>
+            The official .DOCX template with pre-configured styles, margins, and IEEE-compliant
+            column layout ready for your manuscript.
+          </p>
+          <a href="files/ICSAI2026-Word-Template.docx" download class="download-btn">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download .DOCX
+          </a>
+          <div class="file-badge"><span class="file-badge-dot"></span> Word 2016 and above</div>
+        </div>
+
+        <!-- LATEX -->
+        <div class="template-card">
+          <div class="template-card-accent"></div>
+          <div class="template-icon">🧾</div>
+          <div class="card-type-tag">LaTeX Package</div>
+          <h3>LaTeX Template</h3>
+          <p>
+            Complete LaTeX package including the .cls file, bibliography styles,
+            figure placeholder and a fully annotated sample source.
+          </p>
+          <a href="files/ICSAI2026-LaTeX-Template.zip" download class="download-btn">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download .ZIP
+          </a>
+          <div class="file-badge"><span class="file-badge-dot"></span> TeX Live / Overleaf compatible</div>
+        </div>
+
+        <!-- SAMPLE PAPER -->
+        <div class="template-card">
+          <div class="template-card-accent"></div>
+          <div class="template-icon">📘</div>
+          <div class="card-type-tag">Reference Document</div>
+          <h3>Sample Paper</h3>
+          <p>
+            A fully typeset sample paper demonstrating correct heading hierarchy,
+            figure captions, table formatting, and reference style.
+          </p>
+          <a href="files/ICSAI2026-Sample-Paper.pdf" download class="download-btn">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download .PDF
+          </a>
+          <div class="file-badge"><span class="file-badge-dot"></span> Adobe Reader / any PDF viewer</div>
+        </div>
+
+      </div>
+
+      <!-- NOTICE -->
+      <div class="notice-box">
+        <div class="notice-box-header">
+          <div class="notice-icon">⚠️</div>
+          <h3>Important Instructions</h3>
+        </div>
+        <ul class="notice-list">
+          <li>All papers must strictly follow the official conference formatting guidelines.</li>
+          <li>Papers exceeding the page limit may be subject to additional publication charges.</li>
+          <li>Ensure all fonts are embedded correctly before generating your final PDF.</li>
+          <li>Authors should verify plagiarism compliance and formatting accuracy before submission.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><strong>© 2026 International Conference on Smart Artificial Intelligence &amp; Innovation</strong></p>
+    <p>ICSAI 2026 &nbsp;·&nbsp; Nanjing, China</p>
+  </footer>
+
+</body>
+</html>

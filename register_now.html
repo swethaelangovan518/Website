@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registration – ICSAI 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* ═══════════════════════════════════════
+       ROOT VARIABLES
+    ═══════════════════════════════════════ */
+    :root {
+      --navy:   #0b1f3a;
+      --blue:   #1253a4;
+      --accent: #e8a020;
+      --light:  #f4f7fb;
+      --white:  #ffffff;
+      --text:   #222b3a;
+      --muted:  #5a6a7e;
+      --border: #dde4ee;
+      --green:  #1a7a4a;
+      --red:    #c0392b;
+      --shadow: 0 4px 24px rgba(11,31,58,.10);
+    }
+
+    /* ═══════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════ */
+    nav {
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px; text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #f5c842);
+      display: grid; place-items: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; color: var(--navy); font-weight: 700;
+    }
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; color: var(--white); letter-spacing: .5px;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 4px; list-style: none;
+    }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: block; padding: 0 14px; line-height: 64px;
+      color: rgba(255,255,255,.82); font-size: 14px;
+      text-decoration: none; white-space: nowrap; transition: color .2s;
+    }
+    .nav-links > li > a:hover,
+    .nav-links > li > a.active { color: var(--accent); }
+    .nav-links li .dropdown {
+      display: none; position: absolute; top: 64px; left: 0;
+      background: var(--white); min-width: 200px;
+      border-top: 3px solid var(--accent);
+      box-shadow: var(--shadow); border-radius: 0 0 8px 8px;
+    }
+    .nav-links li:hover .dropdown { display: block; }
+    .nav-links .dropdown a {
+      display: block; padding: 10px 18px; font-size: 13px;
+      color: var(--text); text-decoration: none; transition: background .15s;
+    }
+    .nav-links .dropdown a:hover { background: var(--light); color: var(--blue); }
+    .nav-lang {
+      background: var(--accent); color: var(--navy); border: none;
+      padding: 6px 14px; border-radius: 4px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--white); border-radius: 2px; }
+
+    /* ═══════════════════════════════════════
+       PAGE HEADER / BANNER
+    ═══════════════════════════════════════ */
+    .page-header {
+      background: linear-gradient(135deg, var(--navy) 0%, #163870 55%, #1a4d99 100%);
+      padding: 56px 24px 46px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: ''; position: absolute; inset: 0; opacity: .06;
+      background-image: repeating-linear-gradient(
+        45deg, var(--white) 0, var(--white) 1px, transparent 0, transparent 50%
+      );
+      background-size: 28px 28px;
+    }
+    .breadcrumb {
+      display: flex; justify-content: center; gap: 8px;
+      font-size: 13px; color: rgba(255,255,255,.55);
+      margin-bottom: 14px; position: relative; z-index: 1;
+    }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb span { color: rgba(255,255,255,.35); }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 4vw, 42px);
+      color: var(--white); position: relative; z-index: 1;
+    }
+    .page-header p {
+      font-size: 15px; color: rgba(255,255,255,.7);
+      margin-top: 8px; position: relative; z-index: 1;
+    }
+
+    /* ═══════════════════════════════════════
+       LAYOUT
+    ═══════════════════════════════════════ */
+    .main {
+      max-width: 1080px; margin: 0 auto; padding: 64px 24px 80px;
+    }
+    .two-col {
+      display: grid; grid-template-columns: 1fr 420px; gap: 40px;
+      align-items: start;
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION TITLES  (☀ style)
+    ═══════════════════════════════════════ */
+    .sec-title {
+      font-family: 'Playfair Display', serif; font-size: 26px;
+      color: var(--navy); display: flex; align-items: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .sec-title .sun { color: var(--accent); }
+    .sec-divider {
+      height: 3px; width: 56px; background: var(--accent);
+      border-radius: 2px; margin-bottom: 32px;
+    }
+    .sub-heading {
+      font-family: 'Playfair Display', serif; font-size: 18px;
+      color: var(--navy); margin: 36px 0 14px;
+      padding-bottom: 8px; border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sub-heading::before {
+      content: ''; display: inline-block; width: 4px; height: 18px;
+      background: var(--accent); border-radius: 2px;
+    }
+
+    /* ═══════════════════════════════════════
+       FEE TABLE
+    ═══════════════════════════════════════ */
+    .fee-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14.5px; margin-bottom: 28px;
+      box-shadow: var(--shadow); border-radius: 10px; overflow: hidden;
+    }
+    .fee-table thead tr {
+      background: var(--navy); color: var(--white);
+    }
+    .fee-table thead th {
+      padding: 14px 20px; text-align: left;
+      font-size: 13px; letter-spacing: .5px; font-weight: 600;
+    }
+    .fee-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .fee-table tbody tr:last-child { border-bottom: none; }
+    .fee-table tbody tr:hover { background: var(--light); }
+    .fee-table tbody tr:nth-child(odd) { background: #fafbfd; }
+    .fee-table tbody tr:nth-child(odd):hover { background: var(--light); }
+    .fee-table td {
+      padding: 14px 20px; vertical-align: top;
+    }
+    .fee-table td:first-child {
+      font-weight: 600; color: var(--navy); width: 55%;
+    }
+    .fee-table td:last-child { color: var(--muted); }
+    .fee-usd { font-weight: 700; color: var(--blue); font-size: 15px; }
+    .fee-cny { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+    /* ═══════════════════════════════════════
+       REGISTER BUTTONS
+    ═══════════════════════════════════════ */
+    .reg-btn-group {
+      display: flex; gap: 14px; flex-wrap: wrap; margin: 28px 0 0;
+    }
+    .reg-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px; border-radius: 8px;
+      font-size: 14.5px; font-weight: 600; text-decoration: none;
+      transition: all .2s; cursor: pointer; border: none;
+    }
+    .reg-btn-primary {
+      background: var(--blue); color: var(--white);
+      box-shadow: 0 4px 16px rgba(18,83,164,.25);
+    }
+    .reg-btn-primary:hover { background: var(--navy); transform: translateY(-2px); }
+    .reg-btn-outline {
+      background: var(--white); color: var(--blue);
+      border: 2px solid var(--blue);
+    }
+    .reg-btn-outline:hover { background: var(--blue); color: var(--white); }
+
+    /* ═══════════════════════════════════════
+       JOIN TYPE CARDS
+    ═══════════════════════════════════════ */
+    .join-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+    .join-card {
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 22px 20px; transition: box-shadow .2s, transform .2s;
+      position: relative; overflow: hidden;
+    }
+    .join-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .join-card.presenter::before { background: linear-gradient(90deg, var(--blue), #3b7de8); }
+    .join-card.listener::before  { background: linear-gradient(90deg, var(--green), #2ecc71); }
+    .join-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+    .join-card h3 {
+      font-family: 'Playfair Display', serif; font-size: 16px;
+      color: var(--navy); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+    }
+    .join-card p { font-size: 13.5px; color: var(--muted); line-height: 1.7; }
+    .join-icon { font-size: 22px; }
+
+    /* ═══════════════════════════════════════
+       FEE DETAILS  (numbered list)
+    ═══════════════════════════════════════ */
+    .fee-details { margin-bottom: 28px; }
+    .fee-details ol {
+      padding-left: 20px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .fee-details li { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .fee-details li strong { color: var(--navy); }
+    .fee-details ul {
+      list-style: none; padding: 10px 0 0 0;
+      display: flex; flex-direction: column; gap: 7px;
+    }
+    .fee-details ul li {
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .fee-details ul li::before {
+      content: '•'; color: var(--accent); font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════
+       REFUND TABLE
+    ═══════════════════════════════════════ */
+    .refund-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14px; margin-bottom: 16px;
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 2px 10px rgba(11,31,58,.07);
+    }
+    .refund-table thead tr { background: var(--navy); color: var(--white); }
+    .refund-table thead th { padding: 12px 18px; text-align: left; font-size: 13px; font-weight: 600; }
+    .refund-table tbody tr { border-bottom: 1px solid var(--border); }
+    .refund-table tbody tr:last-child { border-bottom: none; }
+    .refund-table td { padding: 12px 18px; color: var(--muted); }
+    .refund-table td:first-child { font-weight: 600; color: var(--navy); }
+    .refund-pct { font-weight: 700; color: var(--green); }
+    .refund-pct.low { color: var(--red); }
+
+    .policy-note {
+      background: #fff8ec; border: 1px solid #f5d898;
+      border-radius: 8px; padding: 14px 18px;
+      font-size: 13.5px; color: #7a5500; line-height: 1.7;
+    }
+    .policy-note strong { color: #5a3a00; }
+
+    /* ═══════════════════════════════════════
+       REGISTRATION FORM CARD  (sticky sidebar)
+    ═══════════════════════════════════════ */
+    .form-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: var(--shadow); position: sticky; top: 80px;
+    }
+    .form-card-header {
+      background: linear-gradient(135deg, var(--navy), #163870);
+      padding: 22px 28px;
+    }
+    .form-card-header h2 {
+      font-family: 'Playfair Display', serif; font-size: 20px;
+      color: var(--white); margin-bottom: 4px;
+    }
+    .form-card-header p { font-size: 13px; color: rgba(255,255,255,.65); }
+    .form-body { padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* form fields */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 13px; font-weight: 600; color: var(--navy);
+      letter-spacing: .2px;
+    }
+    .field label .req { color: var(--red); margin-left: 2px; }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%; padding: 11px 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: 14px; color: var(--text);
+      background: var(--white); transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none; border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(18,83,164,.10);
+    }
+    .field textarea { height: 90px; resize: vertical; }
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a6a7e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field-hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* fee preview */
+    .fee-preview {
+      background: var(--light); border-radius: 10px;
+      padding: 14px 16px; font-size: 13.5px;
+    }
+    .fee-preview-row {
+      display: flex; justify-content: space-between;
+      padding: 5px 0; border-bottom: 1px dashed var(--border);
+    }
+    .fee-preview-row:last-child { border-bottom: none; font-weight: 700; color: var(--navy); }
+    .fee-preview-row span:last-child { color: var(--blue); font-weight: 600; }
+    .fee-preview-row.total span:last-child { color: var(--navy); font-size: 15px; }
+
+    /* checkbox */
+    .checkbox-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13px; color: var(--muted); line-height: 1.5;
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0;
+      accent-color: var(--blue);
+    }
+    .checkbox-row a { color: var(--blue); text-decoration: none; }
+
+    /* submit button */
+    .submit-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--blue), #1a68c8);
+      color: var(--white); border: none; border-radius: 8px;
+      font-family: inherit; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+      box-shadow: 0 4px 16px rgba(18,83,164,.3);
+      letter-spacing: .3px;
+    }
+    .submit-btn:hover {
+      background: linear-gradient(135deg, var(--navy), #163870);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(11,31,58,.3);
+    }
+
+    /* success message (hidden by default) */
+    .success-msg {
+      display: none; background: #eafaf2; border: 1px solid #a8e6c4;
+      border-radius: 10px; padding: 18px 20px; text-align: center;
+      font-size: 15px; color: var(--green); font-weight: 600;
+    }
+    .success-msg .tick { font-size: 32px; display: block; margin-bottom: 8px; }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,.5);
+      text-align: center; padding: 26px; font-size: 13px; line-height: 1.7;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .two-col { grid-template-columns: 1fr; }
+      .form-card { position: static; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: absolute; top: 64px; left: 0; right: 0;
+        background: var(--navy); padding: 12px 0;
+      }
+      .nav-links.open > li > a { line-height: 44px; padding: 0 24px; }
+      .join-cards { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     NAVBAR
+══════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="conference-website.html">
+    <div class="nav-logo-mark">IC</div>
+    <span class="nav-logo-text">ICSAI 2026</span>
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="conference-website.html">Home</a></li>
+    <li>
+      <a href="#">Committee ▾</a>
+      <div class="dropdown">
+        <a href="organizing-committee.html">Organizing Committee</a>
+         
+      </div>
+    </li>
+    <li><a href="speakers.html">Speakers</a></li>
+    <li><a href="call_for_papers.html">Call For Papers</a></li>
+    <li>
+      <a href="#">Submission ▾</a>
+      <div class="dropdown">
+        <a href="submission.html">Submit Paper</a>
+        <a href="download.html">Download Template</a>
+        <a href="editorial_policy.html">Editorial Policy</a>
+        <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
+      </div>
+    </li>
+    <li>
+      <a href="registration.html" class="active">Registration ▾</a>
+      <div class="dropdown">
+        <a href="registration.html" style="color:var(--blue);font-weight:600;">Registration</a>
+        <a href="program_schedule.html">Program Schedule</a>
+         
+      </div>
+    </li>
+    <li><a href="publication.html">Publication</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+
+  <button class="nav-lang">中文</button>
+  <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     PAGE HEADER
+══════════════════════════════════ -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="conference-website.html">Home</a>
+    <span>›</span>
+    <span>Registration</span>
+  </div>
+  <h1>Registration</h1>
+  <p>ICSAI 2026 &nbsp;·&nbsp; June 18–20, 2026 &nbsp;·&nbsp; Nanjing, China</p>
+</div>
+
+<!-- ══════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════ -->
+<div class="main">
+  <div class="two-col">
+
+    <!-- ─── LEFT COLUMN: info ─── -->
+    <div class="left-col">
+
+      <!-- Section title -->
+      <div class="sec-title"><span class="sun">☀</span> Registration</div>
+      <div class="sec-divider"></div>
+
+      <!-- Fee Table -->
+      <h3 class="sub-heading">Registration Fees</h3>
+      <table class="fee-table">
+        <thead>
+          <tr>
+            <th>Items</th>
+            <th>Registration Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Regular Registration for Paper (4 pages)</td>
+            <td>
+              <div class="fee-usd">545 USD / paper</div>
+              <div class="fee-cny">3,800 CNY / paper</div>
+            </td>
+          </tr>
+          <tr>
+            <td>Extra Pages (Begin at Page 5)</td>
+            <td>
+              <div class="fee-usd">55 USD / extra page</div>
+              <div class="fee-cny">400 CNY / extra page</div>
+            </td>
+          </tr>
+          <tr>
+            <td>Attendee without a Submission</td>
+            <td>
+              <div class="fee-usd">215 USD / person</div>
+              <div class="fee-cny">1,500 CNY / person</div>
+            </td>
+          </tr>
+          <tr>
+            <td>Attendee without a Submission <em>(Group, ≥ 3 persons)</em></td>
+            <td>
+              <div class="fee-usd">170 USD / person</div>
+              <div class="fee-cny">1,200 CNY / person</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Quick links -->
+      <div class="reg-btn-group">
+        <a href="#reg-form" class="reg-btn reg-btn-primary">📝 Register Now (English)</a>
+        <a href="#reg-form" class="reg-btn reg-btn-outline">🇨🇳 Register Now (Chinese)</a>
+      </div>
+
+      <!-- Join type cards -->
+      <h3 class="sub-heading">Details of the Attending Registration</h3>
+      <div class="join-cards">
+        <div class="join-card presenter">
+          <h3><span class="join-icon">🎤</span> Join as Presenter</h3>
+          <p>If you are only interested in giving a presentation without publishing in the proceedings, attend as a Presenter. Submit the Abstract and Title of your presentation during registration. For further info contact: <strong>contact_icsai@163.com</strong></p>
+        </div>
+        <div class="join-card listener">
+          <h3><span class="join-icon">👥</span> Join as Listener</h3>
+          <p>ICSAI 2026 is an unmissable event and a great platform to meet renowned experts and researchers. You are welcome to attend. Just complete the registration as a Listener before the registration deadline.</p>
+        </div>
+      </div>
+
+      <!-- Fee details -->
+      <h3 class="sub-heading">Details of the Registration Fees</h3>
+      <div class="fee-details">
+        <ol>
+          <li>Registration fees include <strong>conference proceedings, lunches, souvenirs</strong> and attending all technical sessions.</li>
+          <li>The registration fee does <strong>not</strong> include:
+            <ul>
+              <li>Accommodation</li>
+              <li>Visa application fee</li>
+              <li>Transportation fare</li>
+            </ul>
+          </li>
+          <li>At least <strong>one author</strong> for each accepted final paper must pre-register.</li>
+          <li>Completed registrations will be acknowledged by the Organizing Committee within <strong>2–5 workdays</strong> after receiving your payment.</li>
+          <li>If you cannot attend the conference due to personal reasons, we will post the print proceedings to you together with the payment receipt / Fapiao.</li>
+        </ol>
+      </div>
+
+      <!-- Refund Policy -->
+      <h3 class="sub-heading">Refunds Policy</h3>
+      <table class="refund-table">
+        <thead>
+          <tr>
+            <th>Cancellation Timing</th>
+            <th>Refund Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>60+ days before the conference</td>
+            <td><span class="refund-pct">70% refund</span></td>
+          </tr>
+          <tr>
+            <td>30–60 days before the conference</td>
+            <td><span class="refund-pct">50% refund</span></td>
+          </tr>
+          <tr>
+            <td>Within 30 days before the conference</td>
+            <td><span class="refund-pct low">30% refund</span></td>
+          </tr>
+          <tr>
+            <td>After conference</td>
+            <td><span class="refund-pct low">No refund</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="policy-note">
+        <strong>Note:</strong> Cancellation and refund requests must be made formally by email. The organizing committee reserves the right to change the dates and venue due to force majeure. Losses from force majeure events shall not be liable and the refund policy shall not apply.
+      </div>
+
+    </div><!-- end left col -->
+
+    <!-- ─── RIGHT COLUMN: form ─── -->
+    <div class="right-col">
+      <div class="form-card" id="reg-form">
+        <div class="form-card-header">
+          <h2>📋 Registration Form</h2>
+          <p>Fill in the details below to complete your registration</p>
+        </div>
+        <div class="form-body">
+
+          <!-- Personal Info -->
+          <div class="field-row">
+            <div class="field">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" id="fname" placeholder="e.g. Rajan" />
+            </div>
+            <div class="field">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" id="lname" placeholder="e.g. Patel" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="yourname@university.edu" />
+          </div>
+
+          <div class="field">
+            <label>Phone Number</label>
+            <input type="tel" id="phone" placeholder="+1 555 000 0000" />
+          </div>
+
+          <div class="field">
+            <label>Affiliation / Organization <span class="req">*</span></label>
+            <input type="text" id="affil" placeholder="University or Company name" />
+          </div>
+
+          <div class="field">
+            <label>Country <span class="req">*</span></label>
+            <select id="country">
+              <option value="">— Select Country —</option>
+              <option>China</option>
+              <option>India</option>
+              <option>United States</option>
+              <option>United Kingdom</option>
+              <option>Germany</option>
+              <option>Malaysia</option>
+              <option>Japan</option>
+              <option>South Korea</option>
+              <option>Australia</option>
+              <option>Canada</option>
+              <option>France</option>
+              <option>Italy</option>
+              <option>Brazil</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <!-- Registration type -->
+          <div class="field">
+            <label>Registration Type <span class="req">*</span></label>
+            <select id="regType" onchange="updateFee()">
+              <option value="">— Select Type —</option>
+              <option value="545">Regular Paper Registration (4 pages) — 545 USD</option>
+              <option value="215">Attendee without Submission — 215 USD</option>
+              <option value="170">Group Attendee (≥3 persons) — 170 USD/person</option>
+              <option value="0">Presenter Only (Abstract) — Contact us</option>
+              <option value="0">Listener — Contact us</option>
+            </select>
+          </div>
+
+          <!-- Extra pages (shown for paper reg) -->
+          <div class="field" id="extraPagesField" style="display:none;">
+            <label>Extra Pages (beyond page 4)</label>
+            <select id="extraPages" onchange="updateFee()">
+              <option value="0">0 extra pages</option>
+              <option value="1">1 extra page — +55 USD</option>
+              <option value="2">2 extra pages — +110 USD</option>
+              <option value="3">3 extra pages — +165 USD</option>
+            </select>
+          </div>
+
+          <!-- Paper ID -->
+          <div class="field">
+            <label>Paper ID <span style="font-weight:400;color:var(--muted)">(if applicable)</span></label>
+            <input type="text" id="paperid" placeholder="e.g. ICSAI2026-0123" />
+          </div>
+
+          <!-- Currency preference -->
+          <div class="field">
+            <label>Preferred Currency</label>
+            <select id="currency" onchange="updateFee()">
+              <option value="USD">USD (US Dollar)</option>
+              <option value="CNY">CNY (Chinese Yuan)</option>
+            </select>
+          </div>
+
+          <!-- Fee Preview -->
+          <div class="fee-preview" id="feePreview" style="display:none;">
+            <div class="fee-preview-row">
+              <span>Base Fee</span>
+              <span id="prevBase">—</span>
+            </div>
+            <div class="fee-preview-row" id="prevExtraRow" style="display:none;">
+              <span>Extra Pages</span>
+              <span id="prevExtra">—</span>
+            </div>
+            <div class="fee-preview-row total">
+              <span>Total</span>
+              <span id="prevTotal">—</span>
+            </div>
+          </div>
+
+          <!-- Special requests -->
+          <div class="field">
+            <label>Special Requests / Notes</label>
+            <textarea id="notes" placeholder="Dietary requirements, visa invitation letter request, etc."></textarea>
+          </div>
+
+          <!-- Terms -->
+          <div class="checkbox-row">
+            <input type="checkbox" id="terms" />
+            <label for="terms">I have read and agree to the <a href="#">Registration Terms</a> and <a href="#">Refund Policy</a> of ICSAI 2026.</label>
+          </div>
+
+          <!-- Submit -->
+          <button class="submit-btn" onclick="submitForm()">Submit Registration →</button>
+
+          <!-- Success msg -->
+          <div class="success-msg" id="successMsg">
+            <span class="tick">✅</span>
+            Thank you! Your registration has been received.<br>
+            <span style="font-size:13px;font-weight:400;color:#2d6a4f;">The Organizing Committee will contact you within 2–5 workdays.</span>
+          </div>
+
+        </div><!-- form-body -->
+      </div><!-- form-card -->
+    </div><!-- right col -->
+
+  </div><!-- two-col -->
+</div><!-- main -->
+
+<!-- ══════════════════════════════════
+     FOOTER
+══════════════════════════════════ -->
+<footer>
+  <p>Copyright © 2026 International Conference on Smart Artificial Intelligence &amp; Innovation (ICSAI 2026)</p>
+  <p style="margin-top:5px;"><a href="conference-website.html">www.icsai2026.org</a></p>
+</footer>
+
+<!-- ══════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════ -->
+<script>
+
+  /* Show/hide extra pages field based on reg type */
+  document.getElementById('regType').addEventListener('change', function () {
+    const extra = document.getElementById('extraPagesField');
+    extra.style.display = this.value === '545' ? 'flex' : 'none';
+    if (this.value !== '545') document.getElementById('extraPages').value = '0';
+  });
+
+  /* Update live fee preview */
+  function updateFee() {
+    const regSel   = document.getElementById('regType');
+    const extraSel = document.getElementById('extraPages');
+    const currency = document.getElementById('currency').value;
+    const preview  = document.getElementById('feePreview');
+    const base     = parseFloat(regSel.value) || 0;
+
+    if (!regSel.value || base === 0) {
+      preview.style.display = 'none'; return;
+    }
+
+    const extraPages = parseInt(extraSel.value) || 0;
+    const extraCost  = extraPages * 55;
+    const total      = base + extraCost;
+
+    const rate = currency === 'CNY' ? 7.2 : 1;
+    const sym  = currency === 'CNY' ? '¥' : '$';
+    const fmt  = v => sym + (v * rate).toLocaleString(undefined, {minimumFractionDigits: 0});
+
+    document.getElementById('prevBase').textContent  = fmt(base);
+    document.getElementById('prevTotal').textContent = fmt(total);
+
+    const extraRow = document.getElementById('prevExtraRow');
+    if (extraPages > 0) {
+      document.getElementById('prevExtra').textContent = fmt(extraCost);
+      extraRow.style.display = 'flex';
+    } else {
+      extraRow.style.display = 'none';
+    }
+
+    preview.style.display = 'block';
+  }
+
+  /* Form submit */
+  function submitForm() {
+    const fname   = document.getElementById('fname').value.trim();
+    const lname   = document.getElementById('lname').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const affil   = document.getElementById('affil').value.trim();
+    const country = document.getElementById('country').value;
+    const regType = document.getElementById('regType').value;
+    const terms   = document.getElementById('terms').checked;
+
+    if (!fname || !lname) { alert('Please enter your full name.'); return; }
+    if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
+    if (!affil) { alert('Please enter your affiliation.'); return; }
+    if (!country) { alert('Please select your country.'); return; }
+    if (!regType) { alert('Please select a registration type.'); return; }
+    if (!terms) { alert('Please agree to the Registration Terms and Refund Policy.'); return; }
+
+    /* Hide form fields, show success */
+    document.querySelector('.form-body').querySelectorAll(
+      '.field, .field-row, .checkbox-row, .submit-btn, .fee-preview'
+    ).forEach(el => el.style.display = 'none');
+    document.getElementById('successMsg').style.display = 'block';
+  }
+
+</script>
+
+</body>
+</html>

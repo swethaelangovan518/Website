@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICSAI – Conference History</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --sky:       #3b82f6;
+      --sky-lt:    #dbeafe;
+      --sky-md:    #93c5fd;
+      --gold:      #f59e0b;
+      --gold-lt:   #fef3c7;
+      --green:     #10b981;
+      --green-lt:  #d1fae5;
+      --white:     #ffffff;
+      --canvas:    #f7fafd;
+      --line:      #e2eaf4;
+      --text:      #1e293b;
+      --muted:     #64748b;
+      --sidebar-w: 256px;
+      --shadow-sm: 0 1px 4px rgba(30,58,120,.06), 0 2px 12px rgba(30,58,120,.05);
+      --shadow-md: 0 4px 24px rgba(30,58,120,.09);
+      --radius:    14px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--canvas);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LAYOUT ── */
+    .wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--white);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-header {
+      padding: 28px 22px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .sidebar-logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #60aff5 0%, #3b82f6 50%, #93c5fd 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      color: #fff;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(59,130,246,.28);
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.2px;
+    }
+
+    .sidebar-logo-text span { color: var(--sky); }
+
+    .sidebar-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .sidebar-nav {
+      padding: 16px 14px;
+      flex: 1;
+    }
+
+    .sidebar-section-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 8px;
+      margin-bottom: 8px;
+      margin-top: 6px;
+    }
+
+    .year-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted);
+      text-align: left;
+      border-radius: 9px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all .2s;
+    }
+
+    .year-btn:hover {
+      background: var(--canvas);
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    .year-btn.active {
+      background: var(--sky-lt);
+      color: var(--sky);
+      border-color: #bfdbfe;
+      font-weight: 600;
+    }
+
+    .year-btn .year-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: var(--sky-lt);
+      color: var(--sky);
+      letter-spacing: .3px;
+    }
+
+    .year-btn.active .year-badge {
+      background: var(--sky);
+      color: var(--white);
+    }
+
+    .year-btn .year-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--line);
+      flex-shrink: 0;
+    }
+
+    .year-btn.active .year-dot { background: var(--sky); }
+
+    /* ── CONTENT ── */
+    .content {
+      flex: 1;
+      padding: 40px;
+      min-width: 0;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* left side of the page header (kept for spacing/layout if needed) */
+    .page-header-left { display: block; }
+
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 6px;
+    }
+
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 38px);
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -.4px;
+      line-height: 1.15;
+    }
+
+    .page-title em {
+      font-style: italic;
+      color: var(--sky);
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 14.5px;
+      margin-top: 6px;
+    }
+
+    .edition-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 50px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .edition-tag-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--sky);
+    }
+
+    /* ── STAT ROW ── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+
+    .card-header h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.75;
+    }
+
+    /* ── SPEAKERS ── */
+    .speakers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 4px;
+    }
+
+    .speaker {
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 16px;
+      text-align: center;
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .speaker:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      background: var(--white);
+    }
+
+    .speaker-avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 12px;
+      display: block;
+      border: 2px solid var(--line);
+      box-shadow: 0 0 0 3px var(--sky-lt);
+    }
+
+    .speaker h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .speaker p {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .speaker-role {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--sky-lt);
+      color: var(--sky);
+    }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--sky);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 18px 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .info-box.gold { border-left-color: var(--gold); }
+    .info-box.green { border-left-color: var(--green); }
+
+    .info-box h4 {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .info-box p {
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.7;
+    }
+
+    /* ── HIGHLIGHTS ── */
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .highlight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px;
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .highlight-icon {
+      font-size: 17px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .highlight-item p {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .highlight-item strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--white);
+      border-top: 1px solid var(--line);
+      text-align: center;
+      padding: 22px 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer strong { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .wrapper { flex-direction: column; }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .sidebar-header { padding: 18px 16px 14px; }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 10px 14px 14px;
+        gap: 6px;
+      }
+
+      .sidebar-section-label { display: none; }
+
+      .year-btn {
+        white-space: nowrap;
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+
+      .content { padding: 24px 18px; }
+
+      .page-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-mark">IC</div>
+        <span class="sidebar-logo-text">ICSAI <span>2026</span></span>
+      </div>
+      <div class="sidebar-title">Conference <em style="font-style:italic;color:var(--sky)">History</em></div>
+      <div class="sidebar-sub">Browse past editions</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Editions</div>
+
+      <button class="year-btn active" onclick="showYear('y2026', this)">
+        2026 <span class="year-badge">Current</span>
+      </button>
+      <button class="year-btn" onclick="showYear('y2025', this)">
+        2025 <span class="year-dot"></span>
+      </button>
+      <button class="year-btn" onclick="showYear('y2024', this)">
+        2024 <span class="year-dot"></span>
+      </button>
+      <button class="year-btn" onclick="showYear('y2023', this)">
+        2023 <span class="year-dot"></span>
+      </button>
+      <button class="year-btn" onclick="showYear('y2022', this)">
+        2022 <span class="year-dot"></span>
+      </button>
+      <button class="year-btn" onclick="showYear('y2021', this)">
+        2021 <span class="year-dot"></span>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- ── CONTENT ── -->
+  <main class="content">
+
+    <!-- 2026 -->
+    <div id="y2026" class="section active">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-eyebrow">6th Edition &nbsp;·&nbsp; Nanjing, China</div>
+          <div class="page-title">ICSAI <em>2026</em></div>
+          <div class="page-subtitle">International Conference on Smart Artificial Intelligence &amp; Innovation</div>
+        </div>
+        <div class="edition-tag"><span class="edition-tag-dot"></span> Current Edition</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-value">6th</div>
+          <div class="stat-label">Annual Edition</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">200+</div>
+          <div class="stat-label">Registered Authors</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">40+</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">IEEE</div>
+          <div class="stat-label">Indexed Publication</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🏛️</div>
+          <h3>About the Conference</h3>
+        </div>
+        <p>
+          ICSAI 2026 brings together global researchers in AI, machine learning, and data science
+          for academic collaboration and innovation. The conference features keynote addresses,
+          oral presentations, poster sessions, and workshops covering the full spectrum of
+          intelligent systems research.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🎤</div>
+          <h3>Keynote Speakers</h3>
+        </div>
+
+        <div class="speakers-grid">
+          <div class="speaker">
+            <img src="https://i.pravatar.cc/150?img=12" alt="Dr. John Smith" class="speaker-avatar">
+            <h4>Dr. John Smith</h4>
+            <p>MIT AI Research Lab</p>
+            <span class="speaker-role">Keynote</span>
+          </div>
+          <div class="speaker">
+            <img src="https://i.pravatar.cc/150?img=32" alt="Prof. Lina Chen" class="speaker-avatar">
+            <h4>Prof. Lina Chen</h4>
+            <p>Data Science Expert</p>
+            <span class="speaker-role">Keynote</span>
+          </div>
+          <div class="speaker">
+            <img src="https://i.pravatar.cc/150?img=47" alt="Dr. Arjun Mehta" class="speaker-avatar">
+            <h4>Dr. Arjun Mehta</h4>
+            <p>DeepMind Research</p>
+            <span class="speaker-role">Invited</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h4>Submission Deadline</h4>
+        <p>Full paper submission closes on <strong>August 15, 2026</strong>. Accepted papers will be published in IEEE Xplore Digital Library.</p>
+      </div>
+
+    </div>
+
+    <!-- 2025 -->
+    <div id="y2025" class="section">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-eyebrow">5th Edition &nbsp;·&nbsp; Singapore</div>
+          <div class="page-title">ICSAI <em>2025</em></div>
+          <div class="page-subtitle">5th International Conference on Smart Artificial Intelligence &amp; Innovation</div>
+        </div>
+        <div class="edition-tag"><span class="edition-tag-dot" style="background:var(--green)"></span> Completed</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-value">185</div>
+          <div class="stat-label">Papers Submitted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">94</div>
+          <div class="stat-label">Accepted Papers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">36</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">IEEE</div>
+          <div class="stat-label">Indexed</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <h3>Conference Summary</h3>
+        </div>
+        <p>
+          ICSAI 2025 was successfully held in Singapore with outstanding global participation.
+          The conference featured three parallel tracks covering NLP, computer vision, and
+          autonomous systems, concluding with IEEE-indexed proceedings.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🏆</div>
+          <h3>Conference Highlights</h3>
+        </div>
+        <div class="highlights-grid">
+          <div class="highlight-item">
+            <span class="highlight-icon">🎓</span>
+            <p><strong>Best Paper Award</strong> Dr. Wei Zhang — Deep Reinforcement Learning in Autonomous Vehicles</p>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">🌐</span>
+            <p><strong>Hybrid Format</strong> In-person in Singapore with 400+ online attendees</p>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">📖</span>
+            <p><strong>IEEE Xplore</strong> All proceedings indexed in IEEE Xplore Digital Library</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box green">
+        <h4>Proceedings Available</h4>
+        <p>ICSAI 2025 proceedings are indexed and freely accessible on IEEE Xplore Digital Library.</p>
+      </div>
+
+    </div>
+
+    <!-- 2024 -->
+    <div id="y2024" class="section">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-eyebrow">4th Edition &nbsp;·&nbsp; Seoul, South Korea</div>
+          <div class="page-title">ICSAI <em>2024</em></div>
+          <div class="page-subtitle">4th International Conference on Smart Artificial Intelligence &amp; Innovation</div>
+        </div>
+        <div class="edition-tag"><span class="edition-tag-dot" style="background:var(--green)"></span> Completed</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-value">162</div>
+          <div class="stat-label">Papers Submitted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">78</div>
+          <div class="stat-label">Accepted Papers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">30</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Workshop Tracks</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <h3>Conference Summary</h3>
+        </div>
+        <p>
+          ICSAI 2024 in Seoul featured a full in-person programme with keynote talks,
+          oral presentations, a poster exhibition, and a dedicated awards ceremony recognising
+          outstanding contributions across all research tracks.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🏆</div>
+          <h3>Conference Highlights</h3>
+        </div>
+        <div class="highlights-grid">
+          <div class="highlight-item">
+            <span class="highlight-icon">🎤</span>
+            <p><strong>4 Keynote Speakers</strong> From Google Brain, KAIST, Oxford, and NTU</p>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">🏅</span>
+            <p><strong>Awards Ceremony</strong> Best Paper, Best Presentation, and Young Researcher awards</p>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">🤝</span>
+            <p><strong>Industry Panels</strong> Three industry-academia roundtable discussions</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 2023 -->
+    <div id="y2023" class="section">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-eyebrow">3rd Edition &nbsp;·&nbsp; Tokyo, Japan</div>
+          <div class="page-title">ICSAI <em>2023</em></div>
+          <div class="page-subtitle">3rd International Conference on Smart Artificial Intelligence &amp; Innovation</div>
+        </div>
+        <div class="edition-tag"><span class="edition-tag-dot" style="background:var(--green)"></span> Completed</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-value">150+</div>
+          <div class="stat-label">Participants</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">68</div>
+          <div class="stat-label">Accepted Papers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">26</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">2</div>
+          <div class="stat-label">Special Sessions</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <h3>Conference Summary</h3>
+        </div>
+        <p>
+          Over 150 researchers gathered in Tokyo for deep-dive discussions on AI and Big Data
+          research. Special sessions on Explainable AI and Edge Computing drew significant
+          attention, with lively cross-disciplinary debate throughout the two-day programme.
+        </p>
+      </div>
+
+      <div class="info-box gold">
+        <h4>Special Recognition</h4>
+        <p>ICSAI 2023 received the Best Emerging Conference commendation from the IEEE Technical Committee on AI.</p>
+      </div>
+
+    </div>
+
+    <!-- 2022 -->
+    <div id="y2022" class="section">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-eyebrow">2nd Edition &nbsp;·&nbsp; Online / Hybrid</div>
+          <div class="page-title">ICSAI <em>2022</em></div>
+          <div class="page-subtitle">2nd International Conference on Smart Artificial Intelligence &amp; Innovation</div>
+        </div>
+        <div class="edition-tag"><span class="edition-tag-dot" style="background:var(--green)"></span> Completed</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-value">120</div>
+          <div class="stat-label">Participants</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">54</div>
+          <div class="stat-label">Accepted Papers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">22</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Hybrid</div>
+          <div class="stat-label">Format</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <h3>Conference Summary</h3>
+        </div>
+        <p>
+          ICSAI 2022 was the first hybrid conference edition, adapted to global pandemic
+          conditions with a simultaneous online and limited in-person programme.
+          The format successfully expanded global reach significantly over the inaugural edition.
+        </p>
+      </div>
+
+      <div class="info-box">
+        <h4>Format Innovation</h4>
+        <p>The hybrid model introduced in 2022 has since become the standard approach, improving accessibility for international authors.</p>
+      </div>
+
+    </div>
+
+    <!-- 2021 -->
+    <div id="y2021" class="section">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-eyebrow">1st Edition &nbsp;·&nbsp; Online</div>
+          <div class="page-title">ICSAI <em>2021</em></div>
+          <div class="page-subtitle">Inaugural International Conference on Smart Artificial Intelligence &amp; Innovation</div>
+        </div>
+        <div class="edition-tag"><span class="edition-tag-dot" style="background:var(--gold)"></span> Inaugural</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-value">80</div>
+          <div class="stat-label">Participants</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">38</div>
+          <div class="stat-label">Accepted Papers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">15</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">IEEE</div>
+          <div class="stat-label">Indexed from Day 1</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🌱</div>
+          <h3>Inaugural Edition</h3>
+        </div>
+        <p>
+          The inaugural ICSAI conference launched fully online, establishing the conference's
+          core values of rigorous peer review, open academic dialogue, and IEEE-quality publishing.
+          The proceedings were indexed in IEEE Xplore from the very first edition, setting a
+          high standard for all future years.
+        </p>
+      </div>
+
+      <div class="info-box gold">
+        <h4>Founding Achievement</h4>
+        <p>ICSAI 2021 achieved full IEEE Xplore indexing from its inaugural edition — a milestone that established the conference's academic credibility from day one.</p>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>© 2026 International Conference on Smart Artificial Intelligence &amp; Innovation</strong>
+  &nbsp;·&nbsp; ICSAI 2026 &nbsp;·&nbsp; Nanjing, China
+</footer>
+
+<script>
+  function showYear(year, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.year-btn').forEach(b => {
+      b.classList.remove('active');
+      // reset badge/dot text for non-current years
+    });
+    document.getElementById(year).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>

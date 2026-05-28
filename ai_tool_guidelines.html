@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Tool Guidelines – ICSAI 2026</title>
+
+  <!-- ═══════════════════════════════════════════════
+       FONTS
+  ═══════════════════════════════════════════════ -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════════ */
+    :root {
+      --ink:        #1c2b3a;
+      --ink-soft:   #3d5068;
+      --muted:      #6b7f93;
+      --line:       #dce7f0;
+
+      --sky:        #2e7bcf;
+      --sky-light:  #e8f1fb;
+      --sky-mid:    #c5ddf5;
+      --gold:       #d98c22;
+      --gold-light: #fdf3e3;
+
+      --canvas:     #f7fafd;
+      --white:      #ffffff;
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  18px;
+      --shadow-xs:  0 1px 4px  rgba(28,43,58,.07);
+      --shadow-sm:  0 3px 12px rgba(28,43,58,.09);
+      --shadow-md:  0 6px 28px rgba(28,43,58,.11);
+      --transition: .22s ease;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html  { scroll-behavior: smooth; font-size: 16px; }
+    body  {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink-soft);
+      background: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+    }
+    a   { color: inherit; text-decoration: none; }
+    ul  { list-style: none; }
+
+    /* ═══════════════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════════════ */
+    nav {
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 62px;
+      box-shadow: var(--shadow-xs);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-mark {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--sky), #4a9ee8);
+      display: grid; place-items: center;
+      font-family: 'Lora', serif; font-size: 14px; font-weight: 700;
+      color: var(--white); letter-spacing: .5px; flex-shrink: 0;
+    }
+    .nav-logo-text {
+      font-family: 'Lora', serif; font-size: 17px; font-weight: 600;
+      color: var(--ink); letter-spacing: .3px;
+    }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: block; padding: 0 13px; line-height: 62px;
+      font-size: 13.5px; font-weight: 500; color: var(--ink-soft);
+      letter-spacing: .2px; transition: color var(--transition); white-space: nowrap;
+    }
+    .nav-links > li > a:hover,
+    .nav-links > li > a.active { color: var(--sky); }
+    .nav-links li .dropdown {
+      display: none; position: absolute; top: 62px; left: 0;
+      background: var(--white); min-width: 210px;
+      border: 1px solid var(--line); border-top: 2px solid var(--sky);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      box-shadow: var(--shadow-md);
+    }
+    .nav-links li:hover .dropdown { display: block; }
+    .nav-links .dropdown a {
+      display: block; padding: 10px 18px; font-size: 13px; font-weight: 400;
+      color: var(--ink-soft); border-bottom: 1px solid var(--line);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links .dropdown a:last-child { border-bottom: none; }
+    .nav-links .dropdown a:hover { background: var(--sky-light); color: var(--sky); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 22px; height: 2px; background: var(--ink); border-radius: 2px; }
+
+    /* ═══════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════ */
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(155deg, #e8f2fd 0%, #f0f7ff 45%, #f7fafd 100%);
+      min-height: 300px;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 80px 24px 68px;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(circle, #b8d4f0 1px, transparent 1px);
+      background-size: 32px 32px; opacity: .35; pointer-events: none;
+    }
+    .hero::after {
+      content: ''; position: absolute;
+      width: 560px; height: 560px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,123,207,.10) 0%, transparent 70%);
+      top: -100px; left: 50%; transform: translateX(-50%); pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 760px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up  { animation: fadeUp .65s ease both; }
+    .delay-1  { animation-delay: .12s; }
+    .delay-2  { animation-delay: .24s; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--white); border: 1px solid var(--line);
+      color: var(--sky); font-size: 12px; font-weight: 600;
+      letter-spacing: .8px; text-transform: uppercase;
+      padding: 6px 18px; border-radius: 50px; margin-bottom: 22px;
+      box-shadow: var(--shadow-xs);
+    }
+    .hero h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(28px, 4.5vw, 46px);
+      color: var(--ink); line-height: 1.2; margin-bottom: 14px; font-weight: 700;
+    }
+    .hero h1 em { font-style: normal; color: var(--sky); }
+    .hero p {
+      font-size: 16px; color: var(--muted);
+      font-weight: 300; line-height: 1.7; max-width: 580px; margin: 0 auto;
+    }
+
+    /* ═══════════════════════════════════════════════
+       LAYOUT HELPERS
+    ═══════════════════════════════════════════════ */
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+    section { padding: 72px 0; }
+
+    .sec-header { margin-bottom: 40px; }
+    .sec-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--sky); margin-bottom: 8px;
+    }
+    .sec-title {
+      font-family: 'Lora', serif; font-size: 27px; font-weight: 600;
+      color: var(--ink); line-height: 1.25;
+    }
+    .sec-divider {
+      height: 3px; width: 48px;
+      background: linear-gradient(90deg, var(--sky), #6db8f7);
+      border-radius: 2px; margin-top: 14px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       INTRO SECTION
+    ═══════════════════════════════════════════════ */
+    #intro { background: var(--white); }
+
+    .intro-box {
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--sky);
+      border-radius: var(--radius-md);
+      padding: 32px 34px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .intro-box p {
+      font-size: 15px; color: var(--ink-soft); line-height: 1.85;
+    }
+    .intro-box p strong { color: var(--ink); }
+
+    /* Highlight pills row */
+    .intro-pills {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 50px; font-size: 12.5px; font-weight: 600;
+    }
+    .pill-sky   { background: var(--sky-light);  color: var(--sky);  border: 1px solid var(--sky-mid); }
+    .pill-gold  { background: var(--gold-light); color: var(--gold); border: 1px solid #f0d49a; }
+    .pill-red   { background: #fff0f0;           color: #c0392b;     border: 1px solid #f5c6c6; }
+
+    /* ═══════════════════════════════════════════════
+       POLICY GRID
+    ═══════════════════════════════════════════════ */
+    #policy { background: var(--canvas); }
+
+    .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .policy-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 26px 24px;
+      display: flex; gap: 18px;
+      transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+    }
+    .policy-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: var(--sky-mid);
+    }
+    .policy-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-sm);
+      background: var(--sky-light);
+      display: grid; place-items: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .policy-body h3 {
+      font-size: 15px; color: var(--ink); font-weight: 600;
+      margin-bottom: 7px; line-height: 1.35;
+    }
+    .policy-body p { font-size: 13.5px; color: var(--muted); line-height: 1.72; }
+
+    /* ═══════════════════════════════════════════════
+       IMPORTANT NOTICE
+    ═══════════════════════════════════════════════ */
+    #notice { background: var(--white); }
+
+    .notice-box {
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius-md);
+      padding: 32px 34px;
+    }
+    .notice-box-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
+    }
+    .notice-box-header .n-icon {
+      width: 42px; height: 42px; border-radius: var(--radius-sm);
+      background: var(--gold-light); display: grid; place-items: center;
+      font-size: 20px; flex-shrink: 0;
+      border: 1px solid #f0d49a;
+    }
+    .notice-box-header h3 {
+      font-family: 'Lora', serif; font-size: 19px;
+      color: var(--ink); font-weight: 600;
+    }
+    .notice-list { display: flex; flex-direction: column; gap: 12px; }
+    .notice-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 14.5px; color: var(--ink-soft); line-height: 1.7;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .notice-item:hover { border-color: var(--sky-mid); box-shadow: var(--shadow-xs); }
+    .notice-item .ni-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold); flex-shrink: 0; margin-top: 7px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    footer {
+      background: var(--ink); color: rgba(255,255,255,.50);
+      text-align: center; padding: 28px 24px;
+      font-size: 13px; line-height: 1.8;
+    }
+    footer a { color: #7fbcf0; }
+    footer a:hover { color: #aad5ff; }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: absolute; top: 62px; left: 0; right: 0;
+        background: var(--white); border-top: 1px solid var(--line);
+        padding: 8px 0; box-shadow: var(--shadow-md); z-index: 999;
+      }
+      .nav-links.open > li > a { line-height: 44px; padding: 0 22px; border-bottom: 1px solid var(--line); }
+      .nav-links .dropdown { position: static !important; display: none !important; }
+      .intro-box, .notice-box { padding: 22px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-mark">IC</div>
+    <span class="nav-logo-text">ICSAI 2026</span>
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+
+    <li>
+      <a href="#">Committee ▾</a>
+      <div class="dropdown">
+        <a href="organizing-committee.html">Organizing Committee</a>
+        <a href="program-committee.html">Program Committee</a>
+      </div>
+    </li>
+
+    <li><a href="speaker.html">Speakers</a></li>
+    <li><a href="call_for_papers.html">Call For Papers</a></li>
+
+    <li>
+      <a href="#">Submission ▾</a>
+      <div class="dropdown">
+        <a href="submission.html">Submit Paper</a>
+        <a href="download.html">Download Template</a>
+        <a href="editorial_policy.html">Editorial Policy</a>
+        <a href="ai_tool_guidelines.html" class="active">AI Tool Guidelines</a>
+      </div>
+    </li>
+
+    <li><a href="publication.html">Publication</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="history.html">History</a></li>
+  </ul>
+
+  <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge fade-up">
+      ⚖️ Ethics &amp; Responsible AI Usage
+    </div>
+    <h1 class="fade-up delay-1">
+      AI Tool <em>Guidelines</em>
+    </h1>
+    <p class="fade-up delay-2">
+      ICSAI 2026 promotes responsible, ethical, and transparent usage
+      of Artificial Intelligence tools in academic writing and research.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     INTRO — Responsible AI Usage
+═══════════════════════════════════════════════════════ -->
+<section id="intro">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Overview</p>
+      <h2 class="sec-title">Responsible AI Usage</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <div class="intro-box">
+      <p>
+        ICSAI 2026 recognizes the increasing role of Artificial Intelligence tools in academic
+        research, writing assistance, language enhancement, and data analysis. While these tools
+        can support the research process, their use must remain within clear ethical and academic
+        integrity boundaries.
+      </p>
+      <p>
+        <strong>Authors bear full responsibility</strong> for the accuracy, originality, validity,
+        ethics, and integrity of all submitted work. AI systems cannot be listed as authors or
+        co-authors of any submitted paper under any circumstances.
+      </p>
+
+      <div class="intro-pills">
+        <span class="pill pill-sky">✅ Grammar &amp; Language Aid Permitted</span>
+        <span class="pill pill-gold">⚠️ Disclosure Required for Significant Use</span>
+        <span class="pill pill-red">🚫 AI Cannot Be Listed as Author</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     POLICY CARDS
+═══════════════════════════════════════════════════════ -->
+<section id="policy">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Standards</p>
+      <h2 class="sec-title">AI Tool Policy</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <div class="policy-grid">
+
+      <div class="policy-card">
+        <div class="policy-icon">🤖</div>
+        <div class="policy-body">
+          <h3>Permitted Usage</h3>
+          <p>
+            Authors may use AI tools for grammar correction, language refinement,
+            coding support, and manuscript readability improvement, provided the
+            core intellectual contribution remains the author's own.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-icon">✍️</div>
+        <div class="policy-body">
+          <h3>Human Responsibility</h3>
+          <p>
+            Authors are fully responsible for verifying all AI-generated outputs
+            and research content. Errors or inaccuracies introduced by AI tools
+            remain the author's responsibility.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-icon">🚫</div>
+        <div class="policy-body">
+          <h3>No AI Authorship</h3>
+          <p>
+            AI tools cannot be credited as authors because they cannot assume
+            ethical, legal, or academic accountability for the submitted work.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-icon">📋</div>
+        <div class="policy-body">
+          <h3>Transparency &amp; Disclosure</h3>
+          <p>
+            Authors must disclose any significant use of AI writing or analysis
+            tools within the manuscript's acknowledgements or methods section.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-icon">🔍</div>
+        <div class="policy-body">
+          <h3>Originality Requirement</h3>
+          <p>
+            Papers generated entirely by AI without meaningful human intellectual
+            contribution are strictly prohibited and will be desk-rejected.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-icon">⚖️</div>
+        <div class="policy-body">
+          <h3>Ethical Compliance</h3>
+          <p>
+            All submissions must comply with research ethics, applicable copyright
+            laws, data privacy regulations, and anti-plagiarism standards.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     IMPORTANT NOTICE
+═══════════════════════════════════════════════════════ -->
+<section id="notice">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Compliance</p>
+      <h2 class="sec-title">Important Notice</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <div class="notice-box">
+      <div class="notice-box-header">
+        <div class="n-icon">📌</div>
+        <h3>All Authors Must Be Aware of the Following</h3>
+      </div>
+
+      <div class="notice-list">
+        <div class="notice-item">
+          <div class="ni-dot"></div>
+          <span>
+            All submitted papers will undergo thorough plagiarism and AI-content screening
+            before the peer-review process begins.
+          </span>
+        </div>
+        <div class="notice-item">
+          <div class="ni-dot"></div>
+          <span>
+            Any misuse of AI-generated content, fabricated data, or undisclosed AI assistance
+            may result in immediate rejection and potential reporting to the author's institution.
+          </span>
+        </div>
+        <div class="notice-item">
+          <div class="ni-dot"></div>
+          <span>
+            The conference programme committee reserves the right to request clarification
+            or additional documentation regarding AI tool usage at any stage of review.
+          </span>
+        </div>
+        <div class="notice-item">
+          <div class="ni-dot"></div>
+          <span>
+            Authors must ensure that any AI tools used do not violate intellectual
+            property rights, privacy regulations, or third-party data agreements.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer>
+  <p>Copyright © 2026 International Conference on Smart Artificial Intelligence &amp; Innovation (ICSAI 2026)</p>
+  <p style="margin-top: 5px;"><a href="#">www.icsai2026.org</a> &nbsp;·&nbsp; Nanjing, China</p>
+</footer>
+
+</body>
+</html>

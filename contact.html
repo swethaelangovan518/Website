@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact – ICSAI 2026</title>
+
+  <!-- ═══════════════════════════════════════════════
+       FONTS
+  ═══════════════════════════════════════════════ -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS  (matches index.html palette)
+    ═══════════════════════════════════════════════ */
+    :root {
+      --ink:        #1c2b3a;
+      --ink-soft:   #3d5068;
+      --muted:      #6b7f93;
+      --line:       #dce7f0;
+
+      --sky:        #2e7bcf;
+      --sky-light:  #e8f1fb;
+      --gold:       #d98c22;
+      --gold-light: #fdf3e3;
+
+      --canvas:     #f7fafd;
+      --white:      #ffffff;
+      --card:       #ffffff;
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  18px;
+      --shadow-xs:  0 1px 4px  rgba(28,43,58,.07);
+      --shadow-sm:  0 3px 12px rgba(28,43,58,.09);
+      --shadow-md:  0 6px 28px rgba(28,43,58,.11);
+      --transition: .22s ease;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html  { scroll-behavior: smooth; font-size: 16px; }
+    body  {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink-soft);
+      background: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+    ul  { list-style: none; }
+
+    /* ═══════════════════════════════════════════════
+       NAVBAR  (white, matches index)
+    ═══════════════════════════════════════════════ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 62px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-mark {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--sky), #4a9ee8);
+      display: grid; place-items: center;
+      font-family: 'Lora', serif;
+      font-size: 14px; font-weight: 700; color: var(--white);
+      letter-spacing: .5px; flex-shrink: 0;
+    }
+    .nav-logo-text {
+      font-family: 'Lora', serif;
+      font-size: 17px; font-weight: 600; color: var(--ink); letter-spacing: .3px;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: block; padding: 0 13px; line-height: 62px;
+      font-size: 13.5px; font-weight: 500; color: var(--ink-soft);
+      letter-spacing: .2px; transition: color var(--transition); white-space: nowrap;
+    }
+    .nav-links > li > a:hover,
+    .nav-links > li > a.active { color: var(--sky); }
+
+    .nav-links li .dropdown {
+      display: none; position: absolute; top: 62px; left: 0;
+      background: var(--white); min-width: 210px;
+      border: 1px solid var(--line); border-top: 2px solid var(--sky);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      box-shadow: var(--shadow-md);
+    }
+    .nav-links li:hover .dropdown { display: block; }
+    .nav-links .dropdown a {
+      display: block; padding: 10px 18px; font-size: 13px; font-weight: 400;
+      color: var(--ink-soft); border-bottom: 1px solid var(--line);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links .dropdown a:last-child { border-bottom: none; }
+    .nav-links .dropdown a:hover { background: var(--sky-light); color: var(--sky); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { width: 22px; height: 2px; background: var(--ink); border-radius: 2px; }
+
+    /* ═══════════════════════════════════════════════
+       HERO  (light gradient, matches index)
+    ═══════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(155deg, #e8f2fd 0%, #f0f7ff 45%, #f7fafd 100%);
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 72px 24px 60px;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, #b8d4f0 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: .35; pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,123,207,.10) 0%, transparent 70%);
+      top: -80px; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 2; }
+
+    /* Fade-up animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up  { animation: fadeUp .65s ease both; }
+    .delay-1  { animation-delay: .12s; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--white); border: 1px solid var(--line);
+      color: var(--sky); font-size: 12px; font-weight: 600;
+      letter-spacing: .8px; text-transform: uppercase;
+      padding: 6px 18px; border-radius: 50px; margin-bottom: 20px;
+      box-shadow: var(--shadow-xs);
+    }
+    .hero h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(28px, 4.5vw, 44px);
+      color: var(--ink); line-height: 1.2; margin-bottom: 10px; font-weight: 700;
+    }
+    .hero h1 em { font-style: normal; color: var(--sky); }
+    .hero p {
+      font-size: 16px; color: var(--muted);
+      font-weight: 300; max-width: 500px; margin: 0 auto;
+    }
+
+    /* ═══════════════════════════════════════════════
+       LAYOUT
+    ═══════════════════════════════════════════════ */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 64px 28px;
+    }
+
+    /* Section header */
+    .sec-header { margin-bottom: 36px; }
+    .sec-eyebrow {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--sky); margin-bottom: 8px;
+    }
+    .sec-title {
+      font-family: 'Lora', serif;
+      font-size: 26px; font-weight: 600;
+      color: var(--ink); line-height: 1.25;
+    }
+    .sec-divider {
+      height: 3px; width: 48px;
+      background: linear-gradient(90deg, var(--sky), #6db8f7);
+      border-radius: 2px; margin-top: 14px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       CONTACT CARD
+    ═══════════════════════════════════════════════ */
+    .contact-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      overflow: hidden;
+      flex-wrap: wrap;
+    }
+
+    /* ── LEFT: profile panel ── */
+    .profile {
+      flex: 0 0 260px;
+      background: var(--sky-light);
+      border-right: 1px solid var(--line);
+      padding: 44px 28px 36px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .profile-avatar {
+      width: 108px; height: 108px;
+      border-radius: 50%; overflow: hidden;
+      border: 4px solid var(--sky);
+      box-shadow: 0 4px 16px rgba(46,123,207,.18);
+      margin-bottom: 18px; flex-shrink: 0;
+    }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .profile h2 {
+      font-family: 'Lora', serif;
+      font-size: 19px; color: var(--ink); margin-bottom: 5px;
+    }
+    .profile .role {
+      font-size: 12.5px; color: var(--muted);
+      font-weight: 500; margin-bottom: 22px;
+    }
+
+    /* Capability badges */
+    .badges { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+    .badge {
+      padding: 8px 14px; border-radius: var(--radius-sm);
+      font-size: 12px; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .badge-email  { background: #dbeafe; color: #1d5fad; border: 1px solid #bcd4f5; }
+    .badge-phone  { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+    .badge-wechat { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
+
+    /* ── RIGHT: info panel ── */
+    .info {
+      flex: 1;
+      min-width: 300px;
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .info-section { display: flex; flex-direction: column; gap: 12px; }
+
+    .info-section-title {
+      font-family: 'Lora', serif;
+      font-size: 16px; color: var(--ink);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .info-section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px; height: 17px;
+      background: var(--gold); border-radius: 2px; flex-shrink: 0;
+    }
+
+    /* Contact items */
+    .contact-item {
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--sky);
+      border-radius: var(--radius-sm);
+      padding: 13px 16px;
+      display: flex; align-items: center; gap: 10px;
+      transition: box-shadow var(--transition), border-left-color var(--transition);
+    }
+    .contact-item:hover {
+      box-shadow: var(--shadow-sm);
+      border-left-color: var(--gold);
+    }
+    .contact-item .ci-icon { font-size: 17px; flex-shrink: 0; }
+    .contact-item .ci-label {
+      font-size: 10.5px; font-weight: 600; letter-spacing: .6px;
+      text-transform: uppercase; color: var(--muted);
+      display: block; margin-bottom: 2px;
+    }
+    .contact-item .ci-value { font-size: 14px; color: var(--ink); font-weight: 500; }
+
+    /* Info text blocks */
+    .info-text {
+      font-size: 14.5px; color: var(--ink-soft); line-height: 1.78;
+      padding: 16px 18px;
+      background: var(--canvas);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+    }
+
+    /* Section divider */
+    .info-divider { height: 1px; background: var(--line); margin: 0; }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,.50);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 13px; line-height: 1.8;
+    }
+    footer a { color: #7fbcf0; }
+    footer a:hover { color: #aad5ff; }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: absolute; top: 62px; left: 0; right: 0;
+        background: var(--white); border-top: 1px solid var(--line);
+        padding: 8px 0; box-shadow: var(--shadow-md); z-index: 999;
+      }
+      .nav-links.open > li > a { line-height: 44px; padding: 0 22px; border-bottom: 1px solid var(--line); }
+      .nav-links .dropdown { position: static !important; display: none !important; }
+
+      .contact-card { flex-direction: column; }
+      .profile { flex: none; border-right: none; border-bottom: 1px solid var(--line); }
+      .info { padding: 28px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-mark">IC</div>
+    <span class="nav-logo-text">ICSAI 2026</span>
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="conference-website.html">Home</a></li>
+
+    <li>
+      <a href="#">Committee ▾</a>
+      <div class="dropdown">
+        <a href="organizing-committee.html">Organizing Committee</a>
+        <a href="program-committee.html">Program Committee</a>
+      </div>
+    </li>
+
+    <li><a href="speaker.html">Speakers</a></li>
+    <li><a href="call_for_papers.html">Call For Papers</a></li>
+
+    <li>
+      <a href="#">Submission ▾</a>
+      <div class="dropdown">
+        <a href="submission.html">Submit Paper</a>
+        <a href="download.html">Download Template</a>
+        <a href="editorial_policy.html">Editorial Policy</a>
+        <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
+      </div>
+    </li>
+
+    <li>
+      <a href="#">Registration ▾</a>
+      <div class="dropdown">
+        <a href="register_now.html">Register Now</a>
+        <a href="program_schedule.html">Program Schedule</a>
+      </div>
+    </li>
+
+    <li><a href="publication.html">Publication</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li><a href="history.html">History</a></li>
+  </ul>
+
+  <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge fade-up">📍 Nanjing, China &nbsp;·&nbsp; June 18–20, 2026</div>
+    <h1 class="fade-up delay-1">Contact <em>Us</em></h1>
+    <p class="fade-up delay-1">
+      International Conference on Smart Artificial Intelligence &amp; Innovation
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════ -->
+<div class="container">
+
+  <div class="sec-header">
+    <p class="sec-eyebrow">Get in Touch</p>
+    <h2 class="sec-title">Conference Secretary</h2>
+    <div class="sec-divider"></div>
+  </div>
+
+  <div class="contact-card">
+
+    <!-- ── LEFT: Profile ── -->
+    <div class="profile">
+      <div class="profile-avatar">
+        <img src="https://i.pravatar.cc/150?img=47" alt="Una Gao" />
+      </div>
+      <h2>Una Gao</h2>
+      <span class="role">Conference Secretary</span>
+      <div class="badges">
+        <div class="badge badge-email">📧 Email Support</div>
+        <div class="badge badge-phone">📞 Phone / WhatsApp</div>
+        <div class="badge badge-wechat">💬 WeChat Available</div>
+      </div>
+    </div>
+
+    <!-- ── RIGHT: Info ── -->
+    <div class="info">
+
+      <!-- Contact Information -->
+      <div class="info-section">
+        <h3 class="info-section-title">Contact Information</h3>
+
+        <div class="contact-item">
+          <span class="ci-icon">📧</span>
+          <div>
+            <span class="ci-label">Email</span>
+            <span class="ci-value">contact_caibda@163.com</span>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <span class="ci-icon">📞</span>
+          <div>
+            <span class="ci-label">Tel / WeChat</span>
+            <span class="ci-value">+86-17335783240</span>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <span class="ci-icon">🌐</span>
+          <div>
+            <span class="ci-label">Official Website</span>
+            <span class="ci-value">www.caibda.org</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-divider"></div>
+
+      <!-- Conference Office -->
+      <div class="info-section">
+        <h3 class="info-section-title">Conference Office</h3>
+        <p class="info-text">
+          The Secretary office of CAIBDA Conference will collect submissions,
+          manage reviews, and handle daily organizational tasks. All communications
+          will be acknowledged within 2 business days.
+        </p>
+      </div>
+
+      <div class="info-divider"></div>
+
+      <!-- Important Note -->
+      <div class="info-section">
+        <h3 class="info-section-title">Important Note</h3>
+        <p class="info-text">
+          All paper reviews are completed by program committee members and invited
+          experts. For any questions or issues, please contact the conference
+          secretary directly via email or phone.
+        </p>
+      </div>
+
+    </div><!-- /info -->
+  </div><!-- /contact-card -->
+</div><!-- /container -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer>
+  <p>Copyright © 2026 International Conference on Smart Artificial Intelligence &amp; Innovation (ICSAI 2026)</p>
+  <p style="margin-top: 5px;"><a href="#">www.icsai2026.org</a></p>
+</footer>
+
+</body>
+</html>

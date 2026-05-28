@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICSAI 2026 – International Conference on Smart AI & Innovation</title>
+
+  <!-- ═══════════════════════════════════════════════
+       FONTS
+  ═══════════════════════════════════════════════ -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS — light, airy palette
+    ═══════════════════════════════════════════════ */
+    :root {
+      /* Primary palette */
+      --ink:        #1c2b3a;   /* deep navy-ink for headings */
+      --ink-soft:   #3d5068;   /* body text */
+      --muted:      #6b7f93;   /* captions / meta */
+      --line:       #dce7f0;   /* borders */
+
+      /* Accent */
+      --sky:        #2e7bcf;   /* primary blue */
+      --sky-light:  #e8f1fb;   /* tinted backgrounds */
+      --gold:       #d98c22;   /* warm accent */
+      --gold-light: #fdf3e3;   /* tinted gold bg */
+
+      /* Surfaces */
+      --canvas:     #f7fafd;   /* page background */
+      --white:      #ffffff;
+      --card:       #ffffff;
+
+      /* Utility */
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  18px;
+      --shadow-xs:  0 1px 4px rgba(28,43,58,.07);
+      --shadow-sm:  0 3px 12px rgba(28,43,58,.09);
+      --shadow-md:  0 6px 28px rgba(28,43,58,.11);
+      --transition: .22s ease;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink-soft);
+      background: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+
+    /* ═══════════════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════════════ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 62px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--sky), #4a9ee8);
+      display: grid;
+      place-items: center;
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: .5px;
+    }
+    .nav-logo-text {
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: .3px;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      list-style: none;
+    }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: block;
+      padding: 0 13px;
+      line-height: 62px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      letter-spacing: .2px;
+      transition: color var(--transition);
+      white-space: nowrap;
+    }
+    .nav-links > li > a:hover,
+    .nav-links > li > a.active {
+      color: var(--sky);
+    }
+
+    /* Dropdown */
+    .nav-links li .dropdown {
+      display: none;
+      position: absolute;
+      top: 62px;
+      left: 0;
+      background: var(--white);
+      min-width: 210px;
+      border: 1px solid var(--line);
+      border-top: 2px solid var(--sky);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      box-shadow: var(--shadow-md);
+    }
+    .nav-links li:hover .dropdown { display: block; }
+    .nav-links .dropdown a {
+      display: block;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--ink-soft);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links .dropdown a:last-child { border-bottom: none; }
+    .nav-links .dropdown a:hover {
+      background: var(--sky-light);
+      color: var(--sky);
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(155deg, #e8f2fd 0%, #f0f7ff 45%, #f7fafd 100%);
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 70px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* Subtle dot-grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, #b8d4f0 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: .35;
+      pointer-events: none;
+    }
+
+    /* Soft glow blob */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,123,207,.12) 0%, transparent 70%);
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      color: var(--sky);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .hero h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(28px, 5vw, 50px);
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--sky);
+    }
+
+    .hero-sub {
+      font-size: clamp(14.5px, 2vw, 17.5px);
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 44px;
+      line-height: 1.7;
+    }
+
+    /* Countdown */
+    .countdown {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cd-unit {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px 22px;
+      min-width: 88px;
+      box-shadow: var(--shadow-sm);
+    }
+    .cd-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 34px;
+      color: var(--ink);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+    .cd-label {
+      font-size: 10.5px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SHARED SECTION SHELL
+    ═══════════════════════════════════════════════ */
+    section { padding: 72px 0; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+    .sec-header { margin-bottom: 40px; }
+    .sec-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 8px;
+    }
+    .sec-title {
+      font-family: 'Lora', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.25;
+    }
+    .sec-divider {
+      height: 3px;
+      width: 48px;
+      background: linear-gradient(90deg, var(--sky), #6db8f7);
+      border-radius: 2px;
+      margin-top: 14px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════════════ */
+    .btn {
+      display: inline-block;
+      padding: 10px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: .2px;
+      transition: all var(--transition);
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--sky);
+      color: var(--white);
+    }
+    .btn-primary:hover {
+      background: #235fa0;
+      box-shadow: 0 4px 14px rgba(46,123,207,.3);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--sky);
+      border: 1.5px solid var(--sky);
+    }
+    .btn-outline:hover {
+      background: var(--sky-light);
+    }
+    .btn-accent {
+      background: var(--gold);
+      color: var(--white);
+      font-size: 14.5px;
+      padding: 12px 28px;
+    }
+    .btn-accent:hover {
+      background: #c07a18;
+      box-shadow: 0 4px 14px rgba(217,140,34,.3);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--sky);
+      border: 1.5px solid var(--line);
+      font-size: 14.5px;
+      padding: 12px 28px;
+    }
+    .btn-ghost:hover {
+      background: var(--sky-light);
+      border-color: var(--sky);
+    }
+
+    /* ═══════════════════════════════════════════════
+       ABOUT
+    ═══════════════════════════════════════════════ */
+    #about { background: var(--white); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .about-text p {
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.85;
+      margin-bottom: 18px;
+    }
+
+    .about-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    /* Dates card */
+    .dates-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .dates-card-header {
+      background: var(--sky-light);
+      padding: 14px 22px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--sky);
+      border-bottom: 1px solid var(--line);
+    }
+    .date-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 22px;
+      border-bottom: 1px solid var(--line);
+      transition: background var(--transition);
+    }
+    .date-item:last-child { border-bottom: none; }
+    .date-item:hover { background: var(--canvas); }
+    .date-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: var(--sky-light);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 16px;
+    }
+    .date-info strong {
+      display: block;
+      font-size: 14px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .date-info span {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       TOPICS
+    ═══════════════════════════════════════════════ */
+    #topics { background: var(--canvas); }
+
+    .topics-subtitle {
+      font-size: 14.5px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      margin-top: -12px;
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 18px;
+    }
+
+    .topic-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 22px 20px;
+      display: flex;
+      gap: 14px;
+      transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+    }
+    .topic-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: #b8d4f0;
+    }
+    .topic-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      background: var(--sky-light);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+    .topic-card h3 {
+      font-size: 14px;
+      color: var(--ink);
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .topic-card p {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .topics-cta { text-align: center; margin-top: 36px; }
+
+    /* ═══════════════════════════════════════════════
+       SPEAKERS
+    ═══════════════════════════════════════════════ */
+    #speakers { background: var(--white); }
+
+    .speakers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 22px;
+    }
+
+    .speaker-card {
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .speaker-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+    .speaker-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      background: linear-gradient(135deg, var(--sky), #5fb0f5);
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      color: var(--white);
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(46,123,207,.22);
+    }
+    .speaker-card h3 {
+      font-size: 14.5px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .speaker-card .affil {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.55;
+    }
+    .speaker-card .country {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 11.5px;
+      background: var(--sky-light);
+      border-radius: 50px;
+      padding: 4px 13px;
+      color: var(--sky);
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       PUBLICATION
+    ═══════════════════════════════════════════════ */
+    #publication { background: var(--canvas); }
+
+    .pub-box {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius-md);
+      padding: 28px 30px;
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-xs);
+    }
+    .pub-logo-box {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-sm);
+      background: var(--gold-light);
+      border: 1px solid #f0d9ac;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-family: 'Lora', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .pub-box p {
+      font-size: 14.5px;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+    .pub-box p strong { color: var(--ink); }
+    .pub-box .pub-note {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.75;
+      padding: 12px 16px;
+      background: var(--canvas);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--line);
+    }
+
+    .pub-history { display: flex; flex-direction: column; gap: 10px; }
+    .pub-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 14px 18px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      transition: box-shadow var(--transition);
+    }
+    .pub-row:hover { box-shadow: var(--shadow-sm); }
+    .pub-row strong { color: var(--ink); min-width: 110px; font-weight: 600; }
+    .pub-row a {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--sky-light);
+      border-radius: var(--radius-sm);
+      color: var(--sky);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1px solid #c5ddf5;
+      transition: background var(--transition), color var(--transition);
+    }
+    .pub-row a:hover {
+      background: var(--sky);
+      color: var(--white);
+      border-color: var(--sky);
+    }
+
+    /* ═══════════════════════════════════════════════
+       SPONSORS
+    ═══════════════════════════════════════════════ */
+    #sponsors { background: var(--white); }
+
+    .sponsor-section { margin-bottom: 34px; }
+    .sponsor-section:last-child { margin-bottom: 0; }
+
+    .sponsor-section h3 {
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      color: var(--ink);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sponsor-section h3::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--gold);
+      border-radius: 2px;
+    }
+
+    .sponsor-logos { display: flex; flex-wrap: wrap; gap: 14px; }
+    .sponsor-logo-box {
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .sponsor-logo-box:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: #b8d4f0;
+    }
+    .sponsor-logo-box .s-icon { font-size: 22px; }
+
+    /* ═══════════════════════════════════════════════
+       SUBMISSION CTA BANNER
+    ═══════════════════════════════════════════════ */
+    #submit {
+      background: linear-gradient(155deg, #e8f2fd 0%, #eef6ff 50%, #f5faff 100%);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 72px 0;
+      text-align: center;
+    }
+    #submit h2 {
+      font-family: 'Lora', serif;
+      font-size: 32px;
+      color: var(--ink);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    #submit p {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    #submit p strong { color: var(--gold); }
+
+    .cta-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ═══════════════════════════════════════════════
+       CONTACT
+    ═══════════════════════════════════════════════ */
+    #contact { background: var(--white); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    .contact-info { display: flex; flex-direction: column; gap: 16px; }
+    .contact-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 16px 18px;
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      transition: box-shadow var(--transition);
+    }
+    .contact-row:hover { box-shadow: var(--shadow-sm); }
+    .contact-row .c-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: var(--sky-light);
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .contact-row strong {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+    .contact-row span {
+      font-size: 14.5px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* Form */
+    .contact-form { display: flex; flex-direction: column; gap: 12px; }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 11px 15px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: var(--canvas);
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: var(--sky);
+      background: var(--white);
+    }
+    .contact-form textarea {
+      height: 120px;
+      resize: vertical;
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: var(--muted); }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,.5);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    footer a {
+      color: #7fbcf0;
+      text-decoration: none;
+    }
+    footer a:hover { color: #aad5ff; }
+
+    /* ═══════════════════════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up            { animation: fadeUp .65s ease both; }
+    .delay-1            { animation-delay: .1s; }
+    .delay-2            { animation-delay: .22s; }
+    .delay-3            { animation-delay: .36s; }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 62px;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border-top: 1px solid var(--line);
+        padding: 8px 0;
+        box-shadow: var(--shadow-md);
+        z-index: 999;
+      }
+      .nav-links.open > li > a {
+        line-height: 44px;
+        padding: 0 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-links .dropdown { position: static !important; display: none !important; }
+      .about-grid,
+      .contact-grid { grid-template-columns: 1fr; }
+      .pub-box { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark">IC</div>
+    <span class="nav-logo-text">ICSAI 2026</span>
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about" class="active">Home</a></li>
+
+    <li>
+      <a href="#">Committee ▾</a>
+      <div class="dropdown">
+        <a href="organizing-committee.html">Organizing Committee</a>
+         
+      </div>
+    </li>
+
+    <li><a href="speaker.html">Speakers</a></li>
+    <li><a href="call_for_papers.html">Call For Papers</a></li>
+
+    <li>
+      <a href="#">Submission ▾</a>
+      <div class="dropdown">
+        <a href="submission.html">Submit Paper</a>
+        <a href="download.html">Download Template</a>
+        <a href="editorial_policy.html">Editorial Policy</a>
+        <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
+      </div>
+    </li>
+
+    <li>
+      <a href="#">Registration ▾</a>
+      <div class="dropdown">
+        <a href="register_now.html">Register Now</a>
+        <a href="program_schedule.html">Program Schedule</a>
+      </div>
+    </li>
+
+    <li><a href="publication.html">Publication</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="history.html">History</a></li>
+  </ul>
+
+  <div
+    class="hamburger"
+    onclick="document.getElementById('navLinks').classList.toggle('open')"
+    aria-label="Toggle menu"
+  >
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge fade-up">
+      📍 Nanjing, China &nbsp;·&nbsp; June 18–20, 2026
+    </div>
+
+    <h1 class="fade-up delay-1">
+      Welcome to <em>ICSAI 2026</em>
+    </h1>
+
+    <p class="hero-sub fade-up delay-2">
+      2026 International Conference on Smart Artificial Intelligence &amp; Innovation<br>
+      Connecting researchers, engineers, and pioneers worldwide.
+    </p>
+
+    <div class="countdown fade-up delay-3" id="countdown">
+      <div class="cd-unit"><div class="cd-num" id="cd-days">00</div><div class="cd-label">Days</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">Hours</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">Minutes</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">Seconds</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     ABOUT
+════════════════════════════════════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Overview</p>
+      <h2 class="sec-title">About ICSAI</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <div class="about-grid">
+      <!-- Description -->
+      <div class="about-text">
+        <p>
+          The 2026 International Conference on Smart Artificial Intelligence &amp; Innovation (ICSAI 2026) serves as a premier global forum for researchers, engineers, and practitioners to share cutting-edge advances in artificial intelligence, machine learning, and emerging smart technologies.
+        </p>
+        <p>
+          ICSAI 2026 invites contributions from academia and industry worldwide to foster meaningful discourse, collaborative research, and knowledge exchange at the intersection of intelligence and innovation. The conference welcomes original manuscripts that advance the state of the art in both theoretical foundations and practical applications.
+        </p>
+        <div class="about-actions">
+          <a href="#" class="btn btn-primary">View Committee</a>
+          <a href="#topics" class="btn btn-outline">Call For Papers</a>
+        </div>
+      </div>
+
+      <!-- Important dates -->
+      <div class="dates-card">
+        <div class="dates-card-header">Important Dates</div>
+
+        <div class="date-item">
+          <div class="date-icon">📅</div>
+          <div class="date-info">
+            <strong>June 18–20, 2026</strong>
+            <span>Conference Dates</span>
+          </div>
+        </div>
+        <div class="date-item">
+          <div class="date-icon">📝</div>
+          <div class="date-info">
+            <strong>May 20, 2026</strong>
+            <span>Abstract Submission Deadline</span>
+          </div>
+        </div>
+        <div class="date-item">
+          <div class="date-icon">🔔</div>
+          <div class="date-info">
+            <strong>May 30, 2026</strong>
+            <span>Notification of Acceptance</span>
+          </div>
+        </div>
+        <div class="date-item">
+          <div class="date-icon">📄</div>
+          <div class="date-info">
+            <strong>June 5, 2026</strong>
+            <span>Final Paper Submission</span>
+          </div>
+        </div>
+        <div class="date-item">
+          <div class="date-icon">✅</div>
+          <div class="date-info">
+            <strong>June 10, 2026</strong>
+            <span>Camera-Ready &amp; Registration Deadline</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     TOPICS
+════════════════════════════════════════════ -->
+<section id="topics">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Scope</p>
+      <h2 class="sec-title">Topics of Interest</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <p class="topics-subtitle">Topics of interest for submission include, but are not limited to:</p>
+
+    <div class="topics-grid">
+      <div class="topic-card">
+        <div class="topic-icon">🤖</div>
+        <div>
+          <h3>Foundations of Artificial Intelligence</h3>
+          <p>AI algorithms, machine reasoning, autonomous agents, computational intelligence, knowledge representation and planning.</p>
+        </div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">🗣️</div>
+        <div>
+          <h3>Natural Language Processing &amp; Generative AI</h3>
+          <p>Large language models, ChatGPT-style systems, NLP pipelines, sentiment analysis, machine translation, and human-computer dialogue.</p>
+        </div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">👁️</div>
+        <div>
+          <h3>Computer Vision &amp; Visual Intelligence</h3>
+          <p>Image understanding, video analysis, object detection, 3D vision, multimedia retrieval, and digital image processing.</p>
+        </div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">📊</div>
+        <div>
+          <h3>Machine Learning &amp; Data Mining</h3>
+          <p>Deep learning, reinforcement learning, federated learning, transfer learning, pattern recognition, and decision intelligence.</p>
+        </div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">🗄️</div>
+        <div>
+          <h3>Big Data Management &amp; Security</h3>
+          <p>Big data architecture, cloud analytics, blockchain for trusted computing, privacy-preserving AI, and data governance.</p>
+        </div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">⚙️</div>
+        <div>
+          <h3>Algorithm Optimization &amp; Theoretical Foundations</h3>
+          <p>Optimization methods, graph algorithms, edge computing, theoretical complexity, and distributed algorithm design.</p>
+        </div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">🏥</div>
+        <div>
+          <h3>AI in Healthcare &amp; Life Sciences</h3>
+          <p>Medical image analysis, drug discovery AI, clinical decision support, wearable intelligence, and genomics data mining.</p>
+        </div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">🚗</div>
+        <div>
+          <h3>Smart Systems &amp; Emerging Technologies</h3>
+          <p>Autonomous vehicles, smart cities, IoT intelligence, robotics, digital twins, AR/VR, and next-generation edge AI.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="topics-cta">
+      <a href="#" class="btn btn-primary">View Full CFP</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     SPEAKERS
+════════════════════════════════════════════ -->
+<section id="speakers">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Keynotes</p>
+      <h2 class="sec-title">Keynote Speakers</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <div class="speakers-grid">
+      <div class="speaker-card">
+        <div class="speaker-avatar">L</div>
+        <h3>Prof. Li Wei</h3>
+        <p class="affil">Tsinghua University, School of Computer Science</p>
+        <span class="country">🇨🇳 China</span>
+      </div>
+
+      <div class="speaker-card">
+        <div class="speaker-avatar">A</div>
+        <h3>Prof. Anika Müller</h3>
+        <p class="affil">TU Berlin, Institute for AI Research</p>
+        <span class="country">🇩🇪 Germany</span>
+      </div>
+
+      <div class="speaker-card">
+        <div class="speaker-avatar">R</div>
+        <h3>Dr. Rajan Patel</h3>
+        <p class="affil">IIT Bombay, Dept. of Data Science</p>
+        <span class="country">🇮🇳 India</span>
+      </div>
+
+      <div class="speaker-card">
+        <div class="speaker-avatar">S</div>
+        <h3>Prof. Sara Chen</h3>
+        <p class="affil">MIT CSAIL, Cambridge, MA</p>
+        <span class="country">🇺🇸 USA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     PUBLICATION
+════════════════════════════════════════════ -->
+<section id="publication">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Indexing</p>
+      <h2 class="sec-title">Publication</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <div class="pub-box">
+      <div class="pub-logo-box">IEEE</div>
+      <div>
+        <p>
+          All accepted full papers will be published in
+          <strong>IEEE Conference Proceedings (ISBN: 979-8-3315-5200-8)</strong>
+          and submitted to <strong>IEEE Xplore</strong>, <strong>EI Compendex</strong>,
+          and <strong>Scopus</strong> for indexing.
+        </p>
+        <p class="pub-note">
+          Note: All submitted articles must report original, previously unpublished research.
+          The organizing committee maintains a strict anti-plagiarism policy; any misconduct
+          will result in immediate disqualification.
+        </p>
+      </div>
+    </div>
+
+    <div class="pub-history">
+      <div class="pub-row">
+        <strong>ICSAI 2025</strong>
+        <a href="#">IEEE Xplore</a>
+        <a href="#">EI Compendex</a>
+        <a href="#">Scopus</a>
+      </div>
+      <div class="pub-row">
+        <strong>ICSAI 2024</strong>
+        <a href="#">ACM DL</a>
+        <a href="#">EI Compendex</a>
+        <a href="#">Scopus</a>
+      </div>
+      <div class="pub-row">
+        <strong>ICSAI 2023</strong>
+        <a href="#">IOS Press</a>
+        <a href="#">EI Compendex</a>
+        <a href="#">Scopus</a>
+      </div>
+      <div class="pub-row">
+        <strong>ICSAI 2022</strong>
+        <a href="#">IEEE Xplore</a>
+        <a href="#">EI Compendex</a>
+        <a href="#">Scopus</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     SPONSORS
+════════════════════════════════════════════ -->
+<section id="sponsors">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Partners</p>
+      <h2 class="sec-title">Sponsors &amp; Supporters</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <div class="sponsor-section">
+      <h3>Sponsor</h3>
+      <div class="sponsor-logos">
+        <div class="sponsor-logo-box">
+          <span class="s-icon">🏛️</span>
+          Nanjing University of Science &amp; Technology
+        </div>
+      </div>
+    </div>
+
+    <div class="sponsor-section">
+      <h3>Supporters</h3>
+      <div class="sponsor-logos">
+        <div class="sponsor-logo-box"><span class="s-icon">🎓</span> Tianjin University</div>
+        <div class="sponsor-logo-box"><span class="s-icon">🏫</span> IIT Delhi</div>
+        <div class="sponsor-logo-box"><span class="s-icon">🌐</span> Management &amp; Science University, Malaysia</div>
+        <div class="sponsor-logo-box"><span class="s-icon">🔬</span> NUIST</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     SUBMISSION CTA
+════════════════════════════════════════════ -->
+<section id="submit">
+  <div class="container">
+    <h2>Ready to Submit Your Research?</h2>
+    <p>
+      Join researchers from over 40 countries. Submission deadline:
+      <strong>May 20, 2026</strong>
+    </p>
+    <div class="cta-buttons">
+      <a href="#" class="btn btn-accent">Submit Paper Now</a>
+      <a href="#" class="btn btn-ghost">Download Template</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     CONTACT
+════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Get in Touch</p>
+      <h2 class="sec-title">Contact Us</h2>
+      <div class="sec-divider"></div>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Info -->
+      <div class="contact-info">
+        <div class="contact-row">
+          <div class="c-icon">📧</div>
+          <div>
+            <strong>Email</strong>
+            <span>contact@icsai2026.org</span>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="c-icon">📞</div>
+          <div>
+            <strong>Phone</strong>
+            <span>+86 25 8888 0000</span>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="c-icon">📍</div>
+          <div>
+            <strong>Venue</strong>
+            <span>Nanjing International Conference Center<br>Nanjing, Jiangsu, China</span>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="c-icon">🌐</div>
+          <div>
+            <strong>Website</strong>
+            <span>www.icsai2026.org</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="contact-form">
+        <input type="text"   placeholder="Your Full Name" />
+        <input type="email"  placeholder="Email Address" />
+        <input type="text"   placeholder="Subject" />
+        <textarea            placeholder="Your message…"></textarea>
+        <button class="btn btn-primary" style="align-self: flex-start; padding: 11px 28px;">
+          Send Message
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer>
+  <p>Copyright © 2026 International Conference on Smart Artificial Intelligence &amp; Innovation (ICSAI 2026)</p>
+  <p style="margin-top: 5px;"><a href="#">www.icsai2026.org</a></p>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     COUNTDOWN SCRIPT
+════════════════════════════════════════════ -->
+<script>
+  const TARGET_DATE = new Date("2026-06-18T09:00:00").getTime();
+
+  function pad(n) {
+    return String(n).padStart(2, '0');
+  }
+
+  function updateCountdown() {
+    const diff = TARGET_DATE - Date.now();
+    if (diff <= 0) return;
+
+    const days    = Math.floor(diff / 86_400_000);
+    const hours   = Math.floor((diff % 86_400_000) / 3_600_000);
+    const minutes = Math.floor((diff % 3_600_000)  /    60_000);
+    const seconds = Math.floor((diff %    60_000)  /     1_000);
+
+    document.getElementById('cd-days').textContent  = pad(days);
+    document.getElementById('cd-hours').textContent = pad(hours);
+    document.getElementById('cd-mins').textContent  = pad(minutes);
+    document.getElementById('cd-secs').textContent  = pad(seconds);
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>

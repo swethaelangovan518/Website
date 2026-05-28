@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organizing Committee – ICSAI 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:   #0b1f3a;
+      --blue:   #1253a4;
+      --accent: #e8a020;
+      --light:  #f4f7fb;
+      --white:  #ffffff;
+      --text:   #222b3a;
+      --muted:  #5a6a7e;
+      --border: #dde4ee;
+      --shadow: 0 4px 24px rgba(11,31,58,.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Source Sans 3', sans-serif; color: var(--text); background: var(--white); }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #f5c842);
+      display: grid; place-items: center;
+      font-family: 'Playfair Display', serif; font-size: 18px; color: var(--navy); font-weight: 700;
+    }
+    .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--white); }
+    .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: block; padding: 0 14px; line-height: 64px;
+      color: rgba(255,255,255,.82); font-size: 14px; text-decoration: none; transition: color .2s;
+    }
+    .nav-links > li > a:hover, .nav-links > li > a.active { color: var(--accent); }
+    .nav-links li .dropdown {
+      display: none; position: absolute; top: 64px; left: 0;
+      background: var(--white); min-width: 200px;
+      border-top: 3px solid var(--accent);
+      box-shadow: var(--shadow); border-radius: 0 0 8px 8px;
+    }
+    .nav-links li:hover .dropdown { display: block; }
+    .nav-links .dropdown a {
+      display: block; padding: 10px 18px; font-size: 13px;
+      color: var(--text); text-decoration: none; transition: background .15s;
+    }
+    .nav-links .dropdown a:hover { background: var(--light); color: var(--blue); }
+    .nav-lang {
+      background: var(--accent); color: var(--navy); border: none;
+      padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--navy) 0%, #163870 60%, #1a4d99 100%);
+      padding: 54px 24px 44px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: ''; position: absolute; inset: 0; opacity: .06;
+      background-image: repeating-linear-gradient(45deg, var(--white) 0, var(--white) 1px, transparent 0, transparent 50%);
+      background-size: 28px 28px;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif; font-size: clamp(24px,4vw,40px);
+      color: var(--white); position: relative; z-index: 1;
+    }
+    .page-header p {
+      font-size: 15px; color: rgba(255,255,255,.7); margin-top: 8px; position: relative; z-index: 1;
+    }
+    .breadcrumb {
+      display: flex; justify-content: center; gap: 8px;
+      font-size: 13px; color: rgba(255,255,255,.55); margin-bottom: 16px;
+      position: relative; z-index: 1;
+    }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb span { color: rgba(255,255,255,.4); }
+
+    /* ── LAYOUT ── */
+    .main { max-width: 1080px; margin: 0 auto; padding: 60px 24px; }
+
+    /* ── TABS ── */
+    .tab-bar {
+      display: flex; gap: 0; border-bottom: 2px solid var(--border);
+      margin-bottom: 52px;
+    }
+    .tab-btn {
+      padding: 12px 28px; font-size: 14.5px; font-weight: 600;
+      border: none; background: none; cursor: pointer; color: var(--muted);
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      transition: color .2s, border-color .2s;
+    }
+    .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+    .tab-btn:hover:not(.active) { color: var(--navy); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── SECTION GROUP ── */
+    .committee-section { margin-bottom: 56px; }
+    .section-title {
+      font-family: 'Playfair Display', serif; font-size: 20px; color: var(--navy);
+      padding-bottom: 10px; margin-bottom: 28px;
+      border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before {
+      content: '·'; color: var(--accent); font-size: 30px; line-height: 1;
+    }
+
+    /* ── PROFILE CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 24px;
+    }
+    .cards-grid.single { grid-template-columns: repeat(auto-fill, minmax(230px, 260px)); }
+
+    .profile-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 14px; padding: 28px 18px 22px;
+      text-align: center; transition: box-shadow .25s, transform .25s;
+      position: relative; overflow: hidden;
+    }
+    .profile-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px; background: linear-gradient(90deg, var(--blue), var(--accent));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .3s;
+    }
+    .profile-card:hover { box-shadow: var(--shadow); transform: translateY(-4px); }
+    .profile-card:hover::before { transform: scaleX(1); }
+
+    .avatar {
+      width: 96px; height: 96px; border-radius: 50%;
+      margin: 0 auto 14px; overflow: hidden;
+      border: 3px solid var(--light);
+      background: linear-gradient(135deg, var(--blue), #3b7de8);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 34px;
+      color: var(--white); font-weight: 700;
+    }
+    .avatar img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+
+    .badge {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
+      background: linear-gradient(90deg, #dce8ff, #eff5ff);
+      color: var(--blue); letter-spacing: .4px;
+    }
+    .profile-card h3 { font-size: 14.5px; color: var(--navy); font-weight: 600; line-height: 1.35; }
+    .profile-card .role {
+      font-size: 12px; color: var(--accent); font-weight: 600;
+      margin-top: 4px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    .profile-card .affil {
+      font-size: 12.5px; color: var(--muted); margin-top: 7px; line-height: 1.5;
+    }
+    .profile-card .country-tag {
+      display: inline-block; margin-top: 10px;
+      background: var(--light); border-radius: 20px;
+      padding: 3px 12px; font-size: 11.5px; color: var(--navy); font-weight: 600;
+    }
+
+    /* ── MEMBER LIST ── */
+    .member-list {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 10px;
+    }
+    .member-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .member-item:hover { background: var(--light); }
+    .member-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); margin-top: 6px; flex-shrink: 0;
+    }
+    .member-item strong { font-size: 13.5px; color: var(--navy); display: block; }
+    .member-item span { font-size: 12.5px; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,.5);
+      text-align: center; padding: 26px; font-size: 13px; line-height: 1.7;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .tab-btn { padding: 10px 14px; font-size: 13px; }
+      .member-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="conference-website.html">
+    <div class="nav-logo-mark">IC</div>
+    <span class="nav-logo-text">ICSAI 2026</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="conference-website.html">Home</a></li>
+    <li>
+      <a href="#" class="active">Committee ▾</a>
+      <div class="dropdown">
+        <a href="organizing-committee.html" style="color:var(--blue); font-weight:600;">Organizing Committee</a>
+        <a href="program-committee.html">Program Committee</a>
+      </div>
+    </li>
+    <li><a href="conference-website.html#speakers">Speakers</a></li>
+    <li><a href="conference-website.html#topics">Call For Papers</a></li>
+    <li><a href="conference-website.html#publication">Publication</a></li>
+    <li><a href="conference-website.html#contact">Contact</a></li>
+  </ul>
+  <button class="nav-lang">中文</button>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="conference-website.html">Home</a>
+    <span>›</span>
+    <span>Committee</span>
+    <span>›</span>
+    <span>Organizing Committee</span>
+  </div>
+  <h1>Committee – ICSAI 2026</h1>
+  <p>Meet the distinguished leaders organizing the conference</p>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(event,'organizing')">Organizing Committee</button>
+    <button class="tab-btn" onclick="switchTab(event,'program')">Program Committee</button>
+  </div>
+
+  <!-- ═══ ORGANIZING COMMITTEE TAB ═══ -->
+  <div id="organizing" class="tab-panel active">
+
+    <!-- Honorary Chair -->
+    <div class="committee-section">
+      <h2 class="section-title">Honorary Chair</h2>
+      <div class="cards-grid single">
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Witold+Pedrycz&background=1253a4&color=fff&size=200" alt="Prof. Witold Pedrycz" />
+          </div>
+          <span class="badge">IEEE Fellow</span>
+          <h3>Prof. Witold Pedrycz</h3>
+          <div class="affil">University of Alberta, Canada</div>
+          <span class="country-tag">🇨🇦 Canada</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conference Chairs -->
+    <div class="committee-section">
+      <h2 class="section-title">Conference Chairs</h2>
+      <div class="cards-grid">
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Ljiljana+Trajkovic&background=1253a4&color=fff&size=200" alt="Prof. Ljiljana Trajkovic" />
+          </div>
+          <span class="badge">IEEE Fellow</span>
+          <h3>Prof. Ljiljana Trajkovic</h3>
+          <div class="affil">Simon Fraser University, Canada</div>
+          <span class="country-tag">🇨🇦 Canada</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Valentina+Balas&background=163870&color=fff&size=200" alt="Prof. Valentina Balas" />
+          </div>
+          <span class="badge">IEEE Senior Member</span>
+          <h3>Prof. Valentina Emilia Balas</h3>
+          <div class="affil">Aurel Vlaicu University of Arad, Romania</div>
+          <span class="country-tag">🇷🇴 Romania</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Xiankun+Zhang&background=1a4d99&color=fff&size=200" alt="Prof. Xiankun Zhang" />
+          </div>
+          <h3>Prof. Xiankun Zhang</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Tingting+Zhao&background=1a4d99&color=fff&size=200" alt="Prof. Tingting Zhao" />
+          </div>
+          <h3>Prof. Tingting Zhao</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Program Committee Chairs -->
+    <div class="committee-section">
+      <h2 class="section-title">Technical Program Committee Chairs</h2>
+      <div class="cards-grid">
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Wei-Chiang+Hong&background=1253a4&color=fff&size=200" alt="Prof. Wei-Chiang Hong" />
+          </div>
+          <span class="badge">IEEE Senior Member</span>
+          <h3>Prof. Wei-Chiang Hong</h3>
+          <div class="affil">Harbin Engineering University, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Ning+Xie&background=163870&color=fff&size=200" alt="Prof. Ning Xie" />
+          </div>
+          <h3>Prof. Ning Xie</h3>
+          <div class="affil">University of Electronic Science and Technology of China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Chuanlei+Zhang&background=1a4d99&color=fff&size=200" alt="Prof. Chuanlei Zhang" />
+          </div>
+          <span class="badge">IEEE Member</span>
+          <h3>Prof. Chuanlei Zhang</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Lin+Sun&background=1a4d99&color=fff&size=200" alt="Prof. Lin Sun" />
+          </div>
+          <h3>Prof. Lin Sun</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publication Chairs -->
+    <div class="committee-section">
+      <h2 class="section-title">Publication Chairs</h2>
+      <div class="cards-grid">
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Muath+Obaidat&background=1253a4&color=fff&size=200" alt="Assoc. Prof. Muath Obaidat" />
+          </div>
+          <span class="badge">IEEE Senior Member</span>
+          <h3>Assoc. Prof. Muath Obaidat</h3>
+          <div class="affil">City University of New York, USA</div>
+          <span class="country-tag">🇺🇸 USA</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Gaihua+Wang&background=163870&color=fff&size=200" alt="Prof. Gaihua Wang" />
+          </div>
+          <h3>Prof. Gaihua Wang</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Yarui+Chen&background=1a4d99&color=fff&size=200" alt="Prof. Yarui Chen" />
+          </div>
+          <h3>Prof. Yarui Chen</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Yancui+Shi&background=1a4d99&color=fff&size=200" alt="Assoc. Prof. Yancui Shi" />
+          </div>
+          <h3>Assoc. Prof. Yancui Shi</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Organizing Committee Chairs -->
+    <div class="committee-section">
+      <h2 class="section-title">Organizing Committee Chairs</h2>
+      <div class="cards-grid">
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Yiying+Zhang&background=1253a4&color=fff&size=200" alt="Prof. Yiying Zhang" />
+          </div>
+          <h3>Prof. Yiying Zhang</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Haifeng+Fan&background=163870&color=fff&size=200" alt="Assoc. Prof. Haifeng Fan" />
+          </div>
+          <h3>Assoc. Prof. Haifeng Fan</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Jie+Chen&background=1a4d99&color=fff&size=200" alt="President Jie Chen" />
+          </div>
+          <h3>President Jie Chen</h3>
+          <div class="affil">University of Management and Science Malaysia</div>
+          <span class="country-tag">🇲🇾 Malaysia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publicity Chairs -->
+    <div class="committee-section">
+      <h2 class="section-title">Publicity Chairs</h2>
+      <div class="cards-grid">
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Zhenhua+Lin&background=1253a4&color=fff&size=200" alt="Prof. Zhenhua Lin" />
+          </div>
+          <h3>Prof. Zhenhua Lin</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+        <div class="profile-card">
+          <div class="avatar">
+            <img src="https://ui-avatars.com/api/?name=Zhanjun+Si&background=163870&color=fff&size=200" alt="Prof. Zhanjun Si" />
+          </div>
+          <h3>Prof. Zhanjun Si</h3>
+          <div class="affil">Tianjin University of Science and Technology, China</div>
+          <span class="country-tag">🇨🇳 China</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Organizing Committee Members -->
+    <div class="committee-section">
+      <h2 class="section-title">Organizing Committee Members</h2>
+      <div class="member-list">
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Zhenhua Lin</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Sijia Zhao</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Sujuan Liu</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Kun Liang</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Lecturer Min Li</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Lecturer Chao Wu</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Lecturer Jianzheng Liu</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Lecturer Yingxue Zhang</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Lecturer Zhenyu Zhang</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+      </div>
+    </div>
+
+  </div><!-- end organizing tab -->
+
+  <!-- ═══ PROGRAM COMMITTEE TAB ═══ -->
+  <div id="program" class="tab-panel">
+    <div class="committee-section">
+      <h2 class="section-title">Program Committee Members</h2>
+      <div class="member-list">
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Yarui Chen</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Qian Long</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Guoliang Gong</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Hua Xu</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Lin Sun</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Dalin Zhang (IEEE Senior Member)</strong><span>Hangzhou Dianzi University, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. George Carutasu</strong><span>Romanian American University, Romania</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Uday Gaitonde</strong><span>Indian Institute of Technology Bombay, India</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Phaklen Ehkan</strong><span>University Malaysia Perlis, Malaysia</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Alyani Ismail (IEEE Member)</strong><span>Universiti Putra Malaysia, Malaysia</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Said Fathy EL-Zoghdy</strong><span>Menoufia University, Egypt</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Noreddine Gherabi</strong><span>Sultane Moulay Slimane University, Morocco</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. N. Rajathi</strong><span>Kumaraguru College of Technology, India</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Prof. Kun Zhang</strong><span>Hainan Normal University, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Peng Lin</strong><span>Nanjing University of Information Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Qing Zhao</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Zhengshu Zhou</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Juan Lyu</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Yu Zhang</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Yuan Wang</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Ya'nan Zhang</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. Cong Wang</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assoc. Prof. P. C. Srinivasa Rao</strong><span>Koneru Lakshmaiah Education Foundation, India</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Assis. Prof. Omar DIB</strong><span>Wenzhou-Kean University, France</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Senior Lecturer Attlee M. Gamundani</strong><span>Namibia University of Science and Technology, Namibia</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Senior Lecturer Aslina Baharum</strong><span>Universiti Malaysia Sabah (UMS), Malaysia</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Lecturer Xuran Pan</strong><span>Tianjin University of Science and Technology, China</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Dr. Raid Rafi Omar Al-Nima</strong><span>Northern Technical University, Iraq</span></div></div>
+        <div class="member-item"><div class="member-dot"></div><div><strong>Dr. Zeyneb Kurt</strong><span>Northumbria University, UK</span></div></div>
+      </div>
+    </div>
+  </div><!-- end program tab -->
+
+</div><!-- end main -->
+
+<footer>
+  <p>Copyright © 2026 International Conference on Smart Artificial Intelligence &amp; Innovation (ICSAI 2026)</p>
+  <p style="margin-top:5px;"><a href="conference-website.html">www.icsai2026.org</a></p>
+</footer>
+
+<script>
+  function switchTab(e, id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+</script>
+</body>
+</html>

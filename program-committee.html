@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Committee – ICSAI 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:   #0b1f3a;
+      --blue:   #1253a4;
+      --accent: #e8a020;
+      --light:  #f4f7fb;
+      --white:  #ffffff;
+      --text:   #222b3a;
+      --muted:  #5a6a7e;
+      --border: #dde4ee;
+      --shadow: 0 4px 24px rgba(11,31,58,.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Source Sans 3', sans-serif; color: var(--text); background: var(--white); }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #f5c842);
+      display: grid; place-items: center;
+      font-family: 'Playfair Display', serif; font-size: 18px; color: var(--navy); font-weight: 700;
+    }
+    .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--white); }
+    .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: block; padding: 0 14px; line-height: 64px;
+      color: rgba(255,255,255,.82); font-size: 14px; text-decoration: none; transition: color .2s;
+    }
+    .nav-links > li > a:hover, .nav-links > li > a.active { color: var(--accent); }
+    .nav-links li .dropdown {
+      display: none; position: absolute; top: 64px; left: 0;
+      background: var(--white); min-width: 200px;
+      border-top: 3px solid var(--accent);
+      box-shadow: var(--shadow); border-radius: 0 0 8px 8px;
+    }
+    .nav-links li:hover .dropdown { display: block; }
+    .nav-links .dropdown a {
+      display: block; padding: 10px 18px; font-size: 13px;
+      color: var(--text); text-decoration: none; transition: background .15s;
+    }
+    .nav-links .dropdown a:hover { background: var(--light); color: var(--blue); }
+    .nav-lang {
+      background: var(--accent); color: var(--navy); border: none;
+      padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: linear-gradient(135deg, var(--navy) 0%, #163870 60%, #1a4d99 100%);
+      padding: 54px 24px 44px; text-align: center; position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: ''; position: absolute; inset: 0; opacity: .06;
+      background-image: repeating-linear-gradient(45deg, var(--white) 0, var(--white) 1px, transparent 0, transparent 50%);
+      background-size: 28px 28px;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif; font-size: clamp(24px,4vw,40px);
+      color: var(--white); position: relative; z-index: 1;
+    }
+    .page-header p { font-size: 15px; color: rgba(255,255,255,.7); margin-top: 8px; position: relative; z-index: 1; }
+    .breadcrumb {
+      display: flex; justify-content: center; gap: 8px;
+      font-size: 13px; color: rgba(255,255,255,.55); margin-bottom: 16px; position: relative; z-index: 1;
+    }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb span { color: rgba(255,255,255,.4); }
+
+    /* MAIN */
+    .main { max-width: 1080px; margin: 0 auto; padding: 60px 24px; }
+
+    /* SEARCH & FILTER */
+    .toolbar {
+      display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+      margin-bottom: 36px; padding: 18px 22px;
+      background: var(--light); border-radius: 10px; border: 1px solid var(--border);
+    }
+    .search-box {
+      flex: 1; min-width: 220px; display: flex; align-items: center; gap: 10px;
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 16px;
+    }
+    .search-box input {
+      border: none; outline: none; font-family: inherit; font-size: 14px;
+      color: var(--text); width: 100%; background: transparent;
+    }
+    .search-box span { color: var(--muted); font-size: 16px; }
+    .filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border);
+      background: var(--white); font-size: 13px; color: var(--muted); cursor: pointer;
+      transition: all .2s; font-family: inherit;
+    }
+    .filter-btn.active, .filter-btn:hover { background: var(--blue); color: var(--white); border-color: var(--blue); }
+    .count-badge {
+      background: var(--blue); color: var(--white); border-radius: 20px;
+      padding: 4px 12px; font-size: 13px; font-weight: 600; margin-left: auto;
+    }
+
+    /* SECTION */
+    .section-title {
+      font-family: 'Playfair Display', serif; font-size: 20px; color: var(--navy);
+      padding-bottom: 10px; margin-bottom: 28px;
+      border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: '·'; color: var(--accent); font-size: 30px; line-height: 1; }
+
+    /* MEMBER CARDS */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .member-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 18px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--white); transition: box-shadow .2s, transform .2s;
+    }
+    .member-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+    .mem-avatar {
+      width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+      overflow: hidden; border: 2px solid var(--light);
+    }
+    .mem-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .mem-info { flex: 1; min-width: 0; }
+    .mem-info strong { font-size: 14px; color: var(--navy); display: block; line-height: 1.3; }
+    .mem-info .mem-title {
+      font-size: 11.5px; color: var(--accent); font-weight: 600;
+      text-transform: uppercase; letter-spacing: .4px; margin-top: 2px;
+    }
+    .mem-info .mem-uni { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+    .mem-info .mem-country {
+      display: inline-block; margin-top: 6px; background: var(--light);
+      border-radius: 20px; padding: 2px 10px; font-size: 11px; color: var(--navy); font-weight: 600;
+    }
+    .mem-badge {
+      display: block; font-size: 10.5px; font-weight: 600;
+      background: linear-gradient(90deg, #dce8ff, #eff5ff);
+      color: var(--blue); border-radius: 4px; padding: 2px 7px;
+      width: fit-content; margin-top: 4px;
+    }
+
+    .no-results {
+      text-align: center; padding: 60px 0; color: var(--muted); font-size: 15px;
+      display: none;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,.5);
+      text-align: center; padding: 26px; font-size: 13px; line-height: 1.7;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .members-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="conference-website.html">
+    <div class="nav-logo-mark">IC</div>
+    <span class="nav-logo-text">ICSAI 2026</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="conference-website.html">Home</a></li>
+    <li>
+      <a href="#" class="active">Committee ▾</a>
+      <div class="dropdown">
+        <a href="organizing-committee.html">Organizing Committee</a>
+        <a href="program-committee.html" style="color:var(--blue); font-weight:600;">Program Committee</a>
+      </div>
+    </li>
+    <li><a href="speaker.html">Speakers</a></li>
+    <li><a href="call_for_papers.html">Call For Papers</a></li>
+    <li><a href="conference-website.html#publication">Publication</a></li>
+    <li><a href="conference-website.html#contact">Contact</a></li>
+  </ul>
+  <button class="nav-lang">中文</button>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="conference-website.html">Home</a>
+    <span>›</span>
+    <span>Committee</span>
+    <span>›</span>
+    <span>Program Committee</span>
+  </div>
+  <h1>Program Committee – ICSAI 2026</h1>
+  <p>Distinguished reviewers and program committee members from around the world</p>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search by name, university or country…" oninput="filterMembers()" />
+    </div>
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="setFilter(event,'All')">All</button>
+      <button class="filter-btn" onclick="setFilter(event,'China')">China</button>
+      <button class="filter-btn" onclick="setFilter(event,'India')">India</button>
+      <button class="filter-btn" onclick="setFilter(event,'Malaysia')">Malaysia</button>
+      <button class="filter-btn" onclick="setFilter(event,'Other')">Other</button>
+    </div>
+    <span class="count-badge" id="countBadge">29 Members</span>
+  </div>
+
+  <!-- SECTION TITLE -->
+  <h2 class="section-title">Program Committee Members</h2>
+
+  <!-- MEMBERS GRID -->
+  <div class="members-grid" id="membersGrid">
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Yarui+Chen&background=1253a4&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Yarui Chen</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Qian+Long&background=163870&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Qian Long</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Guoliang+Gong&background=1a4d99&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Guoliang Gong</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Hua+Xu&background=1253a4&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Hua Xu</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Lin+Sun&background=163870&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Lin Sun</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Dalin+Zhang&background=1a4d99&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Dalin Zhang</strong>
+        <span class="mem-badge">IEEE Senior Member</span>
+        <div class="mem-uni">Hangzhou Dianzi University, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Other">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=George+Carutasu&background=2c6e4a&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. George Carutasu</strong>
+        <div class="mem-uni">Romanian American University, Romania</div>
+        <span class="mem-country">🇷🇴 Romania</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="India">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Uday+Gaitonde&background=b5451b&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Uday Gaitonde</strong>
+        <div class="mem-uni">Indian Institute of Technology Bombay, India</div>
+        <span class="mem-country">🇮🇳 India</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Malaysia">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Phaklen+Ehkan&background=0b5c2e&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Phaklen Ehkan</strong>
+        <div class="mem-uni">University Malaysia Perlis, Malaysia</div>
+        <span class="mem-country">🇲🇾 Malaysia</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Malaysia">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Alyani+Ismail&background=0b5c2e&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Alyani Ismail</strong>
+        <span class="mem-badge">IEEE Member</span>
+        <div class="mem-uni">Universiti Putra Malaysia, Malaysia</div>
+        <span class="mem-country">🇲🇾 Malaysia</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Other">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Said+Fathy&background=8b4513&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Said Fathy EL-Zoghdy</strong>
+        <div class="mem-uni">Menoufia University, Egypt</div>
+        <span class="mem-country">🇪🇬 Egypt</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Other">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Noreddine+Gherabi&background=8b6914&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Noreddine Gherabi</strong>
+        <div class="mem-uni">Sultane Moulay Slimane University, Morocco</div>
+        <span class="mem-country">🇲🇦 Morocco</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="India">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=N+Rajathi&background=b5451b&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. N. Rajathi</strong>
+        <div class="mem-uni">Kumaraguru College of Technology, India</div>
+        <span class="mem-country">🇮🇳 India</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Kun+Zhang&background=1253a4&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Prof. Kun Zhang</strong>
+        <div class="mem-uni">Hainan Normal University, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Peng+Lin&background=163870&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. Peng Lin</strong>
+        <div class="mem-uni">Nanjing University of Information Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Qing+Zhao&background=1a4d99&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. Qing Zhao</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Zhengshu+Zhou&background=1253a4&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. Zhengshu Zhou</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Juan+Lyu&background=163870&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. Juan Lyu</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Yu+Zhang&background=1a4d99&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. Yu Zhang</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Yuan+Wang&background=1253a4&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. Yuan Wang</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Yanan+Zhang&background=163870&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. Ya'nan Zhang</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Cong+Wang&background=1a4d99&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. Cong Wang</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="India">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=PC+Srinivasa+Rao&background=b5451b&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assoc. Prof. P. C. Srinivasa Rao</strong>
+        <div class="mem-uni">Koneru Lakshmaiah Education Foundation, India</div>
+        <span class="mem-country">🇮🇳 India</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Other">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Omar+DIB&background=003f7f&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Assis. Prof. Omar DIB</strong>
+        <div class="mem-uni">Wenzhou-Kean University, France</div>
+        <span class="mem-country">🇫🇷 France</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Other">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Attlee+Gamundani&background=2c5f2e&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Sr. Lecturer Attlee M. Gamundani</strong>
+        <div class="mem-uni">Namibia University of Science and Technology, Namibia</div>
+        <span class="mem-country">🇳🇦 Namibia</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Malaysia">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Aslina+Baharum&background=0b5c2e&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Sr. Lecturer Aslina Baharum</strong>
+        <div class="mem-uni">Universiti Malaysia Sabah (UMS), Malaysia</div>
+        <span class="mem-country">🇲🇾 Malaysia</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="China">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Xuran+Pan&background=1253a4&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Lecturer Xuran Pan</strong>
+        <div class="mem-uni">Tianjin University of Science and Technology, China</div>
+        <span class="mem-country">🇨🇳 China</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Other">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Raid+Al-Nima&background=5a2d00&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Dr. Raid Rafi Omar Al-Nima</strong>
+        <div class="mem-uni">Northern Technical University, Iraq</div>
+        <span class="mem-country">🇮🇶 Iraq</span>
+      </div>
+    </div>
+
+    <div class="member-card" data-country="Other">
+      <div class="mem-avatar"><img src="https://ui-avatars.com/api/?name=Zeyneb+Kurt&background=003f7f&color=fff&size=100" /></div>
+      <div class="mem-info">
+        <strong>Dr. Zeyneb Kurt</strong>
+        <div class="mem-uni">Northumbria University, UK</div>
+        <span class="mem-country">🇬🇧 UK</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="no-results" id="noResults">No members found matching your search.</div>
+
+</div><!-- end main -->
+
+<footer>
+  <p>Copyright © 2026 International Conference on Smart Artificial Intelligence &amp; Innovation (ICSAI 2026)</p>
+  <p style="margin-top:5px;"><a href="conference-website.html">www.icsai2026.org</a></p>
+</footer>
+
+<script>
+  let activeFilter = 'All';
+
+  function setFilter(e, country) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    activeFilter = country;
+    filterMembers();
+  }
+
+  function filterMembers() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.member-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      const countryMatch = activeFilter === 'All' || card.dataset.country === activeFilter;
+      const textMatch = text.includes(query);
+      const show = countryMatch && textMatch;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) visible++;
+    });
+    document.getElementById('countBadge').textContent = visible + ' Member' + (visible !== 1 ? 's' : '');
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>
