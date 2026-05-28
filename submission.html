@@ -174,9 +174,35 @@ ul { list-style: none; }
   opacity: 1;
 }
 
-/* Dropdown panel */
- 
-/* The visible card sits inside a wrapper so padding above is transparent */
+/* ═══════════════════════════════════════════
+   DROPDOWN — FIXED
+   The key trick: position absolute, full opacity/visibility
+   controlled by parent .nav-item hover/focus-within
+═══════════════════════════════════════════ */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 200px;
+  padding-top: 6px; /* gap so mouse can travel from trigger to menu */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--tr), visibility var(--tr), transform var(--tr);
+  transform: translateY(-6px);
+  z-index: 1000;
+}
+
+/* Show on parent hover OR keyboard focus-within */
+.nav-item:hover > .dropdown,
+.nav-item:focus-within > .dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* The visible card */
 .dropdown-inner {
   background: var(--white);
   border: 1px solid var(--line);
@@ -185,13 +211,7 @@ ul { list-style: none; }
   padding: 6px;
   overflow: hidden;
 }
- 
-/* Keep dropdown open when mouse moves onto it */
-.dropdown:hover {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
+
 .dropdown a {
   display: block;
   padding: 8px 12px;
@@ -249,7 +269,6 @@ ul { list-style: none; }
   display: flex;
   align-items: center;
 }
-/* Dot-grid overlay */
 .hero::before {
   content: '';
   position: absolute;
@@ -258,7 +277,6 @@ ul { list-style: none; }
   background-size: 28px 28px;
   pointer-events: none;
 }
-/* Radial glow blob */
 .hero::after {
   content: '';
   position: absolute;
@@ -1276,43 +1294,50 @@ footer ul a:hover { color: #93c5fd; }
       <li class="nav-item">
         <a href="conference-website.html" class="nav-link active">Home</a>
       </li>
+
+      <!-- Committee dropdown -->
       <li class="nav-item">
         <a href="#" class="nav-link">Committee <span class="chev">▾</span></a>
         <div class="dropdown">
           <div class="dropdown-inner">
-          <a href="organizing-committee.html">Organizing Committee</a>
-          <a href="technical-committee.html">Technical Committee</a>
-          <a href="advisory-board.html">Advisory Board</a>
-        </div>
+            <a href="organizing-committee.html">Organizing Committee</a>
+             
+          </div>
         </div>
       </li>
+
       <li class="nav-item">
         <a href="speaker.html" class="nav-link">Speakers</a>
       </li>
       <li class="nav-item">
         <a href="call_for_papers.html" class="nav-link">Call For Papers</a>
       </li>
+
+      <!-- Submission dropdown — FIXED: all links inside .dropdown-inner -->
       <li class="nav-item">
         <a href="#" class="nav-link">Submission <span class="chev">▾</span></a>
         <div class="dropdown">
           <div class="dropdown-inner">
-          <a href="submission.html">Submit Paper</a>
-          <a href="download.html">Download Template</a>
-          <div class="dropdown-divider"></div>
-        </div>
-          <a href="editorial_policy.html">Editorial Policy</a>
-          <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
+            <a href="submission.html">Submit Paper</a>
+            <a href="download.html">Download Template</a>
+            <div class="dropdown-divider"></div>
+            <a href="editorial_policy.html">Editorial Policy</a>
+            <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
+          </div>
         </div>
       </li>
+
+      <!-- Registration dropdown -->
       <li class="nav-item">
         <a href="#" class="nav-link">Registration <span class="chev">▾</span></a>
         <div class="dropdown">
           <div class="dropdown-inner">
-          <a href="register_now.html">Register Now</a>
-          <a href="program_schedule.html">Program Schedule</a>
-        </div>
+            <a href="register_now.html">Register Now</a>
+            <a href="program_schedule.html">Program Schedule</a>
+          </div>
         </div>
       </li>
+
       <li class="nav-item">
         <a href="publication.html" class="nav-link">Publication</a>
       </li>
@@ -1332,7 +1357,6 @@ footer ul a:hover { color: #93c5fd; }
 <!-- HERO -->
 <section class="hero" aria-label="Welcome banner">
   <div class="hero-inner">
-    <!-- Left content -->
     <div>
       <div class="hero-pill">
         <span class="hero-pill-dot"></span>
@@ -1362,7 +1386,6 @@ footer ul a:hover { color: #93c5fd; }
       </div>
     </div>
 
-    <!-- Right: countdown card -->
     <div class="hero-countdown-card">
       <div class="countdown-label">⏳ Conference Countdown</div>
       <div class="countdown-grid">
@@ -1903,34 +1926,14 @@ footer ul a:hover { color: #93c5fd; }
 </footer>
 
 <script>
-// ── Navbar: scroll shadow + progress bar + active section ──
-const mainNav   = document.getElementById('mainNav');
-const navProg   = document.getElementById('navProgress');
-
-// ── Dropdown: keep open on slow mouse movement ──
-document.querySelectorAll('.nav-item').forEach(item => {
-  let timer;
-  item.addEventListener('mouseleave', () => {
-    timer = setTimeout(() => {
-      const dd = item.querySelector('.dropdown');
-      if (dd) { dd.style.opacity='0'; dd.style.visibility='hidden'; dd.style.pointerEvents='none'; }
-    }, 80);
-  });
-  item.addEventListener('mouseenter', () => {
-    clearTimeout(timer);
-    const dd = item.querySelector('.dropdown');
-    if (dd) { dd.style.opacity=''; dd.style.visibility=''; dd.style.pointerEvents=''; }
-  });
-});
+// ── Navbar scroll shadow + progress bar ──
+const mainNav = document.getElementById('mainNav');
+const navProg = document.getElementById('navProgress');
 
 window.addEventListener('scroll', () => {
   const scrollY   = window.scrollY;
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-
-  // Shadow when scrolled
   mainNav.classList.toggle('scrolled', scrollY > 10);
-
-  // Progress bar width
   navProg.style.width = docHeight > 0 ? (scrollY / docHeight * 100) + '%' : '0%';
 
   // Active nav link based on section in view
@@ -1941,25 +1944,25 @@ window.addEventListener('scroll', () => {
   });
   document.querySelectorAll('.nav-link').forEach(link => {
     const href = link.getAttribute('href') || '';
+    // Don't mark dropdown triggers as active
+    if (link.querySelector('.chev')) return;
     link.classList.toggle('active',
       href === '#' + current ||
       (current === '' && href.includes('conference-website'))
     );
-    // Never mark dropdown-trigger links active via scroll
-    if (link.querySelector('.chev')) link.classList.remove('active');
   });
 }, { passive: true });
 
-// ── Countdown to June 18, 2026 ──────────────────
+// ── Countdown to June 18, 2026 ──
 function updateCountdown() {
   const target = new Date('2026-06-18T09:00:00');
-  const now = new Date();
-  const diff = Math.max(0, target - now);
+  const now    = new Date();
+  const diff   = Math.max(0, target - now);
   const d = Math.floor(diff / 86400000);
   const h = Math.floor((diff % 86400000) / 3600000);
   const m = Math.floor((diff % 3600000) / 60000);
   const s = Math.floor((diff % 60000) / 1000);
-  const pad = n => String(n).padStart(2,'0');
+  const pad = n => String(n).padStart(2, '0');
   document.getElementById('cd-days').textContent  = pad(d);
   document.getElementById('cd-hours').textContent = pad(h);
   document.getElementById('cd-mins').textContent  = pad(m);
@@ -1968,30 +1971,19 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// ── Schedule Tabs ────────────────────────────────
+// ── Schedule Tabs ──
 function switchDay(idx, btn) {
-  document.querySelectorAll('.schedule-content').forEach((c,i) => c.classList.toggle('active', i===idx));
-  document.querySelectorAll('.schedule-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.schedule-content').forEach((c, i) => c.classList.toggle('active', i === idx));
+  document.querySelectorAll('.schedule-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
 }
 
-// ── Submission Type Cards ────────────────────────
+// ── Submission Type Cards ──
 document.querySelectorAll('.sub-type-card').forEach(card => {
   card.addEventListener('click', () => {
     document.querySelectorAll('.sub-type-card').forEach(c => c.classList.remove('active'));
     card.classList.add('active');
   });
 });
-
-// ── Active Nav on Scroll ─────────────────────────
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('section[id]');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const id = entry.target.id;
-      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${id}`));
-    }
-  });
-}, { threshold: 0.5 });
-
-sections.forEach(section => observer.observe(section));
+</script>
+</body>
+</html>
