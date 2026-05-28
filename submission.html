@@ -1283,7 +1283,7 @@ footer ul a:hover { color: #93c5fd; }
 <nav class="navbar" id="mainNav" aria-label="Main navigation">
   <div class="nav-progress" id="navProgress"></div>
   <div class="navbar-inner">
-    <a href="conference-website.html" class="nav-brand">
+    <a href="index.html" class="nav-brand">
       <div class="nav-logo-mark">IC</div>
       <div class="nav-brand-text">
         <strong>ICSAI 2026</strong>
@@ -1292,7 +1292,7 @@ footer ul a:hover { color: #93c5fd; }
     </a>
     <ul class="nav-links">
       <li class="nav-item">
-        <a href="conference-website.html" class="nav-link active">Home</a>
+        <a href="index.html" class="nav-link active">Home</a>
       </li>
 
       <!-- Committee dropdown -->
@@ -1948,7 +1948,7 @@ window.addEventListener('scroll', () => {
     if (link.querySelector('.chev')) return;
     link.classList.toggle('active',
       href === '#' + current ||
-      (current === '' && href.includes('conference-website'))
+      (current === '' && href.includes('index'))
     );
   });
 }, { passive: true });
@@ -1962,7 +1962,7 @@ function updateCountdown() {
   const h = Math.floor((diff % 86400000) / 3600000);
   const m = Math.floor((diff % 3600000) / 60000);
   const s = Math.floor((diff % 60000) / 1000);
-  const pad = n => String(n).padStart(2, '0');
+  const pad = n => String(n).padStart(2, '0');  
   document.getElementById('cd-days').textContent  = pad(d);
   document.getElementById('cd-hours').textContent = pad(h);
   document.getElementById('cd-mins').textContent  = pad(m);
