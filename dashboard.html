@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conference System — Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --blue-dark:   #081428;
+  --blue-mid:    #0d2248;
+  --blue-brand:  #1a4fc4;
+  --blue-bright: #2d6ff0;
+  --blue-light:  #5b9cf6;
+  --blue-pale:   #dbeafe;
+  --accent:      #38bdf8;
+  --white:       #ffffff;
+  --gray-50:     #f8fafc;
+  --gray-100:    #f1f5f9;
+  --gray-200:    #e2e8f0;
+  --gray-400:    #94a3b8;
+  --gray-600:    #475569;
+  --gray-800:    #1e293b;
+  --red:         #ef4444;
+  --green:       #22c55e;
+  --orange:      #f59e0b;
+  --radius:      14px;
+  --tr:          all .22s cubic-bezier(.4,0,.2,1);
+  --sidebar-w:   240px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--gray-50); color: var(--gray-800); min-height: 100vh; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+
+@keyframes fadeUp  { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+@keyframes pulse   { 0%,100%{opacity:.6} 50%{opacity:1} }
+@keyframes spin    { to{transform:rotate(360deg)} }
+
+/* ── LAYOUT ── */
+.layout { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: linear-gradient(160deg, var(--blue-dark) 0%, var(--blue-mid) 60%, #0f2d5e 100%);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+.sidebar::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(45,111,240,.25) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: 1.5rem 1.25rem 1.3rem;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  position: relative; z-index: 1;
+}
+.logo-icon {
+  width: 38px; height: 38px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-icon svg { width: 22px; height: 22px; }
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-size: .78rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: .08em;
+  line-height: 1.2;
+}
+.logo-text span { color: var(--accent); display: block; font-size: .62rem; font-weight: 400; letter-spacing: .12em; opacity: .8; }
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1.2rem .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: relative; z-index: 1;
+  overflow-y: auto;
+}
+.nav-section-lbl {
+  font-size: .62rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.3);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .9rem .6rem .35rem;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .62rem .8rem;
+  border-radius: 9px;
+  font-size: .84rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.5);
+  transition: var(--tr);
+  cursor: pointer;
+  position: relative;
+}
+.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+.nav-item:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.85); }
+.nav-item.active {
+  background: rgba(45,111,240,.35);
+  color: var(--white);
+  border: 1px solid rgba(45,111,240,.4);
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 25%; bottom: 25%;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
+}
+.nav-badge {
+  margin-left: auto;
+  background: var(--blue-bright);
+  color: var(--white);
+  font-size: .6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 99px;
+  min-width: 18px;
+  text-align: center;
+}
+.nav-badge.orange { background: var(--orange); }
+
+.sidebar-user {
+  padding: 1rem .75rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+  position: relative; z-index: 1;
+}
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .6rem .7rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  cursor: pointer;
+  transition: var(--tr);
+}
+.user-card:hover { background: rgba(255,255,255,.09); }
+.user-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-bright), var(--accent));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--white);
+  flex-shrink: 0;
+}
+.user-info { flex: 1; min-width: 0; }
+.user-name {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-role {
+  font-size: .65rem;
+  color: rgba(255,255,255,.4);
+  text-transform: capitalize;
+}
+.user-card svg { width: 13px; height: 13px; color: rgba(255,255,255,.3); flex-shrink: 0; }
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  height: 64px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  padding: 0 1.75rem;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  flex: 1;
+}
+.topbar-title span { color: var(--gray-400); font-weight: 400; font-size: .85rem; margin-left: .5rem; font-family: 'DM Sans', sans-serif; }
+.topbar-actions { display: flex; align-items: center; gap: .65rem; }
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: var(--gray-100);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-600);
+  transition: var(--tr);
+  position: relative;
+}
+.icon-btn:hover { background: var(--gray-200); color: var(--gray-800); }
+.icon-btn svg { width: 16px; height: 16px; }
+.notif-dot {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 7px; height: 7px;
+  background: var(--red);
+  border: 2px solid var(--white);
+  border-radius: 50%;
+}
+
+/* ── PAGE CONTENT ── */
+.page-content {
+  padding: 1.75rem;
+  flex: 1;
+  animation: fadeUp .4s ease both;
+}
+
+/* ── WELCOME BANNER ── */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 50%, var(--blue-brand) 100%);
+  border-radius: 18px;
+  padding: 1.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.welcome-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 70% 50%, rgba(56,189,248,.18) 0%, transparent 60%);
+}
+.welcome-text { position: relative; z-index: 1; }
+.welcome-text h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: .3rem;
+}
+.welcome-text p { color: rgba(255,255,255,.55); font-size: .85rem; }
+.welcome-badge {
+  position: relative; z-index: 1;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  padding: .9rem 1.2rem;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+.welcome-badge-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+}
+.welcome-badge-lbl { font-size: .68rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; }
+
+/* ── STATS GRID ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  border: 1px solid var(--gray-200);
+  transition: var(--tr);
+  animation: fadeUp .4s ease both;
+}
+.stat-card:nth-child(1) { animation-delay: .05s; }
+.stat-card:nth-child(2) { animation-delay: .1s; }
+.stat-card:nth-child(3) { animation-delay: .15s; }
+.stat-card:nth-child(4) { animation-delay: .2s; }
+.stat-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); transform: translateY(-2px); }
+.stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
+.stat-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.stat-icon svg { width: 18px; height: 18px; }
+.stat-icon.blue  { background: #eff6ff; color: var(--blue-brand); }
+.stat-icon.green { background: #f0fdf4; color: var(--green); }
+.stat-icon.orange{ background: #fffbeb; color: var(--orange); }
+.stat-icon.red   { background: #fef2f2; color: var(--red); }
+.stat-change {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 99px;
+}
+.stat-change.up   { background: #f0fdf4; color: var(--green); }
+.stat-change.down { background: #fef2f2; color: var(--red); }
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--gray-800);
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+.stat-lbl { font-size: .8rem; color: var(--gray-400); }
+
+/* ── TWO COLUMN ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.three-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1rem; }
+
+/* ── CARD ── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  animation: fadeUp .5s ease both;
+}
+.card-header {
+  padding: 1.1rem 1.25rem .9rem;
+  border-bottom: 1px solid var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-header h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--gray-800);
+}
+.card-header p { font-size: .75rem; color: var(--gray-400); margin-top: 2px; }
+.card-link { font-size: .78rem; color: var(--blue-brand); font-weight: 600; cursor: pointer; }
+.card-link:hover { text-decoration: underline; }
+.card-body { padding: 1.1rem 1.25rem; }
+
+/* ── PAPER LIST ── */
+.paper-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.paper-item:last-child { border-bottom: none; padding-bottom: 0; }
+.paper-num {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  background: var(--gray-100);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--gray-600);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.paper-info { flex: 1; min-width: 0; }
+.paper-title {
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: .22rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.paper-meta { font-size: .72rem; color: var(--gray-400); }
+.status-badge {
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 99px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.status-badge.review  { background: #fffbeb; color: var(--orange); }
+.status-badge.accepted{ background: #f0fdf4; color: var(--green); }
+.status-badge.rejected{ background: #fef2f2; color: var(--red); }
+.status-badge.pending { background: #eff6ff; color: var(--blue-brand); }
+
+/* ── ACTIVITY FEED ── */
+.activity-item {
+  display: flex;
+  gap: .75rem;
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.activity-dot.blue   { background: var(--blue-bright); }
+.activity-dot.green  { background: var(--green); }
+.activity-dot.orange { background: var(--orange); }
+.activity-dot.red    { background: var(--red); }
+.activity-text { font-size: .82rem; color: var(--gray-600); line-height: 1.5; }
+.activity-text strong { color: var(--gray-800); font-weight: 600; }
+.activity-time { font-size: .7rem; color: var(--gray-400); margin-top: 2px; }
+
+/* ── DEADLINE LIST ── */
+.deadline-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.deadline-item:last-child { border-bottom: none; }
+.deadline-date {
+  text-align: center;
+  background: var(--gray-100);
+  border-radius: 8px;
+  padding: .3rem .5rem;
+  min-width: 44px;
+  flex-shrink: 0;
+}
+.deadline-day {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--blue-brand);
+  line-height: 1;
+}
+.deadline-month { font-size: .6rem; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; }
+.deadline-info { flex: 1; }
+.deadline-title { font-size: .82rem; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+.deadline-conf  { font-size: .71rem; color: var(--gray-400); }
+.deadline-urgency {
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+.deadline-urgency.soon { background: #fef2f2; color: var(--red); }
+.deadline-urgency.ok   { background: #f0fdf4; color: var(--green); }
+
+/* ── MINI CHART ── */
+.mini-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 60px;
+  padding: .5rem 0;
+}
+.mini-bar {
+  flex: 1;
+  background: var(--blue-pale);
+  border-radius: 4px 4px 0 0;
+  transition: background .2s;
+  cursor: pointer;
+}
+.mini-bar:hover { background: var(--blue-bright); }
+.mini-bar.active { background: var(--blue-brand); }
+.bar-labels { display: flex; gap: 5px; margin-top: 4px; }
+.bar-label { flex: 1; text-align: center; font-size: .6rem; color: var(--gray-400); }
+
+/* ── LOGOUT BUTTON ── */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .55rem .8rem;
+  border-radius: 8px;
+  font-size: .84rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.45);
+  transition: var(--tr);
+  cursor: pointer;
+  width: 100%;
+  margin-top: .5rem;
+  background: none;
+}
+.logout-btn:hover { background: rgba(239,68,68,.15); color: #fca5a5; }
+.logout-btn svg { width: 15px; height: 15px; }
+
+/* ── LOADING SCREEN ── */
+#loading-screen {
+  position: fixed; inset: 0;
+  background: var(--gray-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity .3s;
+}
+.loader-ring {
+  width: 40px; height: 40px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--blue-brand);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .three-col  { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .welcome-badge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div id="loading-screen">
+  <div class="loader-ring"></div>
+</div>
+
+<div class="layout" id="app" style="display:none">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <rect x="17" y="4" width="14" height="23" rx="7" fill="white"/>
+          <path d="M9 25c0 8.284 6.716 15 15 15s15-6.716 15-15" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <line x1="24" y1="40" x2="24" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="16" y1="46" x2="32" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">CONFERENCE<br><span>SYSTEM</span></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-lbl">Main</div>
+
+      <div class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Dashboard
+      </div>
+
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        My Papers
+        <span class="nav-badge">3</span>
+      </div>
+
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        Reviewers
+        <span class="nav-badge orange">2</span>
+      </div>
+
+      <div class="nav-section-lbl">Conferences</div>
+
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Schedule
+      </div>
+
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Analytics
+      </div>
+
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 01-3.46 0"/>
+        </svg>
+        Notifications
+        <span class="nav-badge">5</span>
+      </div>
+
+      <div class="nav-section-lbl">Account</div>
+
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        Profile
+      </div>
+
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/>
+        </svg>
+        Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-card">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Loading…</div>
+          <div class="user-role" id="user-role">—</div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-title">Dashboard <span>/ Overview</span></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+        <button class="icon-btn" title="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+          </svg>
+          <span class="notif-dot"></span>
+        </button>
+        <button class="icon-btn" title="Help">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="page-content">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h2 id="welcome-heading">Good morning! 👋</h2>
+          <p>Here's what's happening with your conferences today.</p>
+        </div>
+        <div class="welcome-badge">
+          <div class="welcome-badge-num">7</div>
+          <div class="welcome-badge-lbl">Active Days</div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <span class="stat-change up">↑ 12%</span>
+          </div>
+          <div class="stat-num">3</div>
+          <div class="stat-lbl">Papers Submitted</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <span class="stat-change up">↑ 3</span>
+          </div>
+          <div class="stat-num">2</div>
+          <div class="stat-lbl">Under Review</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="stat-change up">↑ 1</span>
+          </div>
+          <div class="stat-num">1</div>
+          <div class="stat-lbl">Accepted</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <span class="stat-change down">↓ 2</span>
+          </div>
+          <div class="stat-num">4</div>
+          <div class="stat-lbl">Upcoming Deadlines</div>
+        </div>
+      </div>
+
+      <!-- Papers + Activity -->
+      <div class="three-col" style="margin-bottom:1rem">
+
+        <!-- My Papers -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>My Papers</h3>
+              <p>Recent submissions</p>
+            </div>
+            <a class="card-link">View all</a>
+          </div>
+          <div class="card-body">
+            <div class="paper-item">
+              <div class="paper-num">01</div>
+              <div class="paper-info">
+                <div class="paper-title">Deep Learning Approaches for NLP in Low-Resource Settings</div>
+                <div class="paper-meta">ICML 2026 · Submitted Jun 1</div>
+              </div>
+              <span class="status-badge review">Review</span>
+            </div>
+            <div class="paper-item">
+              <div class="paper-num">02</div>
+              <div class="paper-info">
+                <div class="paper-title">Federated Learning Privacy Guarantees</div>
+                <div class="paper-meta">NeurIPS 2026 · Submitted May 22</div>
+              </div>
+              <span class="status-badge accepted">Accepted</span>
+            </div>
+            <div class="paper-item">
+              <div class="paper-num">03</div>
+              <div class="paper-info">
+                <div class="paper-title">Efficient Transformers via Sparse Attention Kernels</div>
+                <div class="paper-meta">ICLR 2026 · Submitted May 10</div>
+              </div>
+              <span class="status-badge pending">Pending</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column: Activity + Deadlines -->
+        <div style="display:flex;flex-direction:column;gap:1rem">
+
+          <!-- Activity -->
+          <div class="card">
+            <div class="card-header">
+              <div><h3>Recent Activity</h3></div>
+            </div>
+            <div class="card-body">
+              <div class="activity-item">
+                <span class="activity-dot green"></span>
+                <div>
+                  <div class="activity-text"><strong>Paper #02</strong> was accepted to NeurIPS 2026.</div>
+                  <div class="activity-time">2 hours ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="activity-dot blue"></span>
+                <div>
+                  <div class="activity-text">Reviewer assigned to <strong>Paper #01</strong>.</div>
+                  <div class="activity-time">Yesterday</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="activity-dot orange"></span>
+                <div>
+                  <div class="activity-text">Deadline reminder: <strong>ICML 2026</strong> camera-ready in 3 days.</div>
+                  <div class="activity-time">2 days ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deadlines -->
+          <div class="card">
+            <div class="card-header">
+              <div><h3>Deadlines</h3></div>
+              <a class="card-link">Calendar</a>
+            </div>
+            <div class="card-body">
+              <div class="deadline-item">
+                <div class="deadline-date">
+                  <div class="deadline-day">03</div>
+                  <div class="deadline-month">Jun</div>
+                </div>
+                <div class="deadline-info">
+                  <div class="deadline-title">Camera-Ready Submission</div>
+                  <div class="deadline-conf">ICML 2026</div>
+                </div>
+                <span class="deadline-urgency soon">2 days</span>
+              </div>
+              <div class="deadline-item">
+                <div class="deadline-date">
+                  <div class="deadline-day">15</div>
+                  <div class="deadline-month">Jun</div>
+                </div>
+                <div class="deadline-info">
+                  <div class="deadline-title">Abstract Submission</div>
+                  <div class="deadline-conf">NeurIPS 2026</div>
+                </div>
+                <span class="deadline-urgency ok">2 wks</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Submission trend -->
+      <div class="card" style="animation-delay:.3s">
+        <div class="card-header">
+          <div>
+            <h3>Submission Activity</h3>
+            <p>Last 7 months</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="mini-bars" id="chart-bars"></div>
+          <div class="bar-labels" id="chart-labels"></div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </main>
+</div><!-- /layout -->
+
+<script>
+/* ── CONFIG (same keys as auth page) ── */
+const SUPABASE_URL      = 'https://yjxkbnbmoasoxhtgqpwj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqeGtibmJtb2Fzb3hodGdxcHdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDQ3NTgsImV4cCI6MjA5NTc4MDc1OH0.BsRuh1rcBpG1rU4c5E7mx3TU0wBRGT-3qy5qWYtsD08';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ── AUTH GUARD ── */
+(async () => {
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      window.location.replace('/index.html');
+      return;
+    }
+    initDashboard(session.user);
+  } catch (_) {
+    /* If Supabase not reachable locally, show demo mode */
+    initDashboard(null);
+  }
+})();
+
+function initDashboard(user) {
+  /* Hide loader, show app */
+  document.getElementById('loading-screen').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+  }, 300);
+
+  /* Populate user info */
+  const meta     = user?.user_metadata || {};
+  const name     = meta.full_name || user?.email?.split('@')[0] || 'Guest User';
+  const role     = meta.role || 'author';
+  const initials = name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2) || 'G';
+
+  document.getElementById('user-name').textContent   = name;
+  document.getElementById('user-role').textContent   = role;
+  document.getElementById('user-avatar').textContent = initials;
+
+  /* Greeting */
+  const hr = new Date().getHours();
+  const greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+  const firstName = name.split(' ')[0];
+  document.getElementById('welcome-heading').textContent = `${greet}, ${firstName}! 👋`;
+
+  /* Mini bar chart */
+  const data   = [2, 5, 3, 8, 4, 6, 7];
+  const months = ['Dec','Jan','Feb','Mar','Apr','May','Jun'];
+  const max    = Math.max(...data);
+  const barsEl = document.getElementById('chart-bars');
+  const lblsEl = document.getElementById('chart-labels');
+  data.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'mini-bar' + (i === data.length - 1 ? ' active' : '');
+    bar.style.height = Math.round((v / max) * 100) + '%';
+    bar.title = `${months[i]}: ${v} submissions`;
+    barsEl.appendChild(bar);
+    const lbl = document.createElement('div');
+    lbl.className = 'bar-label';
+    lbl.textContent = months[i];
+    lblsEl.appendChild(lbl);
+  });
+}
+
+async function handleLogout() {
+  try { await sb.auth.signOut(); } catch (_) {}
+  window.location.replace('/index.html');
+}
+
+/* Listen for sign-out from another tab */
+sb.auth.onAuthStateChange((event) => {
+  if (event === 'SIGNED_OUT') window.location.replace('/index.html');
+});
+</script>
+</body>
+</html>

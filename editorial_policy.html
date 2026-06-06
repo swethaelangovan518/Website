@@ -2,630 +2,728 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ICSAI 2026 - Editorial Policy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editorial Policy – ICSAI 2026</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS  — from ICSAI 2026 homepage
+    ═══════════════════════════════════════════════ */
     :root {
-      --sky:      #3b82f6;
-      --sky-lt:   #dbeafe;
-      --sky-md:   #93c5fd;
-      --gold:     #f59e0b;
-      --gold-lt:  #fef3c7;
-      --white:    #ffffff;
-      --canvas:   #f7fafd;
-      --line:     #e2eaf4;
-      --text:     #1e293b;
-      --muted:    #64748b;
-      --shadow-sm: 0 1px 4px rgba(30,58,120,.06), 0 2px 12px rgba(30,58,120,.05);
-      --shadow-md: 0 4px 24px rgba(30,58,120,.09);
-      --radius:   14px;
+      --ink:        #1c2b3a;
+      --ink-soft:   #3d5068;
+      --muted:      #6b7f93;
+      --line:       #dce7f0;
+
+      --sky:        #2e7bcf;
+      --sky-light:  #e8f1fb;
+      --gold:       #d98c22;
+      --gold-light: #fdf3e3;
+
+      --canvas:     #f7fafd;
+      --white:      #ffffff;
+      --card:       #ffffff;
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  18px;
+      --shadow-xs:  0 1px 4px rgba(28,43,58,.07);
+      --shadow-sm:  0 3px 12px rgba(28,43,58,.09);
+      --shadow-md:  0 6px 28px rgba(28,43,58,.11);
+      --transition: .22s ease;
     }
 
+    /* ═══════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
     body {
-      background: var(--white);
-      color: var(--text);
       font-family: 'DM Sans', sans-serif;
-      overflow-x: hidden;
+      color: var(--ink-soft);
+      background: var(--canvas);
       -webkit-font-smoothing: antialiased;
     }
+    a { color: var(--sky); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    /* ── NAVBAR ── */
+    /* ═══════════════════════════════════════════════
+       NAVBAR  — exact copy from ICSAI 2026 homepage
+    ═══════════════════════════════════════════════ */
     nav {
       position: sticky;
       top: 0;
-      z-index: 999;
-      height: 68px;
+      z-index: 1000;
       background: var(--white);
       border-bottom: 1px solid var(--line);
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 0 clamp(20px, 5vw, 70px);
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 62px;
+      box-shadow: var(--shadow-xs);
     }
 
-    .logo {
+    /* Logo */
+    .nav-logo {
       display: flex;
       align-items: center;
-      gap: 11px;
+      gap: 10px;
       text-decoration: none;
     }
-
-    .logo-mark {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #60aff5 0%, #3b82f6 50%, #93c5fd 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'DM Serif Display', serif;
-      color: #fff;
-      font-size: 15px;
-      box-shadow: 0 2px 10px rgba(59,130,246,.30);
-    }
-
-    .logo-text {
-      font-size: 18px;
+    .nav-logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--sky), #4a9ee8);
+      display: grid;
+      place-items: center;
+      font-family: 'Lora', serif;
+      font-size: 14px;
       font-weight: 700;
-      color: var(--text);
-      letter-spacing: -.3px;
+      color: var(--white);
+      letter-spacing: .5px;
+    }
+    .nav-logo-text {
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: .3px;
     }
 
-    .logo-text span { color: var(--sky); }
-
+    /* Nav links */
     .nav-links {
       display: flex;
       align-items: center;
+      gap: 2px;
       list-style: none;
-      gap: 4px;
     }
-
-    .nav-links li { position: relative; }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 500;
-      padding: 8px 14px;
-      border-radius: 8px;
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
       display: block;
-      transition: color .2s, background .2s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--sky);
-      background: var(--sky-lt);
-    }
-
-    .dropdown {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      min-width: 210px;
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-md);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(6px);
-      transition: .25s;
-    }
-
-    .dropdown a {
-      color: var(--text);
+      padding: 0 13px;
+      line-height: 62px;
       font-size: 13.5px;
-      padding: 11px 16px;
-      border-radius: 0;
-      border-bottom: 1px solid var(--line);
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      letter-spacing: .2px;
+      transition: color var(--transition);
+      white-space: nowrap;
     }
-
-    .dropdown a:last-child { border-bottom: none; }
-
-    .dropdown a:hover {
-      background: var(--canvas);
+    .nav-links > li > a:hover,
+    .nav-links > li > a.active {
       color: var(--sky);
-      padding-left: 22px;
     }
 
-    .nav-links li:hover .dropdown {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
+    /* Dropdown */
+    .nav-links li .dropdown {
+      display: none;
+      position: absolute;
+      top: 62px;
+      left: 0;
+      background: var(--white);
+      min-width: 210px;
+      border: 1px solid var(--line);
+      border-top: 2px solid var(--sky);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      box-shadow: var(--shadow-md);
+    }
+    .nav-links li:hover .dropdown { display: block; }
+    .nav-links .dropdown a {
+      display: block;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--ink-soft);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links .dropdown a:last-child { border-bottom: none; }
+    .nav-links .dropdown a:hover {
+      background: var(--sky-light);
+      color: var(--sky);
+    }
+    /* Highlight the active dropdown item */
+    .nav-links .dropdown a.active {
+      background: var(--sky-light);
+      color: var(--sky);
+      font-weight: 600;
     }
 
-    /* ── HERO ── */
-    .hero {
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* ═══════════════════════════════════════════════
+       PAGE HERO  — breadcrumb + title
+    ═══════════════════════════════════════════════ */
+    .page-hero {
       position: relative;
-      min-height: 320px;
-      background: linear-gradient(160deg, #e8f2fd 0%, #f0f7ff 55%, #f7fafd 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 80px 28px;
       overflow: hidden;
+      background: linear-gradient(155deg, #e8f2fd 0%, #f0f7ff 45%, #f7fafd 100%);
+      border-bottom: 1px solid var(--line);
+      padding: 64px 24px 58px;
+      text-align: center;
     }
-
-    .hero::before {
+    /* dot-grid identical to homepage hero */
+    .page-hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(circle, #93c5fd 1px, transparent 1px);
-      background-size: 28px 28px;
-      opacity: .22;
+      background-image: radial-gradient(circle, #b8d4f0 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: .30;
       pointer-events: none;
     }
-
-    .hero::after {
+    .page-hero::after {
       content: '';
       position: absolute;
-      top: -80px;
-      left: 50%;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,123,207,.10) 0%, transparent 70%);
+      top: -80px; left: 50%;
       transform: translateX(-50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(ellipse at center, rgba(147,197,253,.38) 0%, transparent 70%);
       pointer-events: none;
     }
+    .page-hero-content { position: relative; z-index: 2; }
 
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 680px;
-    }
-
-    .hero-badge {
+    /* Breadcrumb pill */
+    .breadcrumb {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 7px 18px;
+      gap: 6px;
+      background: var(--white);
+      border: 1px solid var(--line);
       border-radius: 50px;
-      background: rgba(255,255,255,.75);
-      border: 1px solid var(--line);
-      color: var(--sky);
+      padding: 6px 18px;
       font-size: 12.5px;
-      font-weight: 600;
-      letter-spacing: .4px;
-      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--muted);
       margin-bottom: 22px;
-      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow-xs);
+      letter-spacing: .2px;
     }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--sky); }
+    .breadcrumb .sep { color: var(--line); font-size: 14px; }
+    .breadcrumb .current { color: var(--sky); font-weight: 600; }
 
-    .hero-badge::before {
-      content: '';
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--sky);
-      display: inline-block;
-    }
-
-    .hero h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(36px, 5vw, 52px);
-      font-weight: 400;
-      color: var(--text);
-      line-height: 1.15;
-      margin-bottom: 16px;
-      letter-spacing: -.5px;
-    }
-
-    .hero h1 em {
-      font-style: italic;
-      color: var(--sky);
-    }
-
-    .hero p {
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.8;
-      max-width: 560px;
-      margin: 0 auto;
-    }
-
-    /* ── LAYOUT ── */
-    .section-white { background: var(--white); }
-    .section-canvas { background: var(--canvas); }
-
-    section.main-section { padding: 72px 0; }
-
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 28px;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 52px;
-    }
-
-    .section-eyebrow {
-      font-size: 11.5px;
+    .page-hero h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(26px, 4vw, 40px);
       font-weight: 700;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--sky);
-      margin-bottom: 10px;
+      color: var(--ink);
+      line-height: 1.25;
+      margin-bottom: 12px;
     }
+    .page-hero h1 em { font-style: normal; color: var(--sky); }
 
-    .section-header h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(26px, 3.5vw, 36px);
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-
-    .section-header p {
+    .page-hero p {
+      font-size: 15.5px;
       color: var(--muted);
-      font-size: 15px;
-    }
-
-    /* ── REVIEW PROCESS CARD ── */
-    .process-card {
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 20px;
-    }
-
-    .process-card-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 32px;
-      padding-bottom: 28px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .process-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #dbeafe, #eff6ff);
-      border: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      flex-shrink: 0;
-    }
-
-    .process-card-header-text h3 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .process-card-header-text p {
-      color: var(--muted);
-      font-size: 14.5px;
-      line-height: 1.75;
-    }
-
-    /* ── STEPS ── */
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .step-item {
-      background: var(--canvas);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--sky);
-      border-radius: 0 10px 10px 0;
-      padding: 20px 22px;
-      transition: transform .25s, box-shadow .25s;
-    }
-
-    .step-item:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
-      background: var(--white);
-    }
-
-    .step-number {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--sky);
-      margin-bottom: 6px;
-    }
-
-    .step-item h4 {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .step-item p {
-      color: var(--muted);
-      font-size: 13.5px;
+      font-weight: 300;
+      max-width: 540px;
+      margin: 0 auto;
       line-height: 1.7;
     }
 
-    /* ── INFO CARDS ── */
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
+    /* Divider rule — same as sec-divider on homepage */
+    .hero-rule {
+      height: 3px;
+      width: 48px;
+      background: linear-gradient(90deg, var(--sky), #6db8f7);
+      border-radius: 2px;
+      margin: 20px auto 0;
     }
 
-    .info-card {
+    /* ═══════════════════════════════════════════════
+       MAIN CONTENT
+    ═══════════════════════════════════════════════ */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 56px 28px 80px;
+    }
+
+    /* ── Section eyebrow + title (homepage pattern) */
+    .sec-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 6px;
+    }
+    .sec-title {
+      font-family: 'Lora', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.25;
+    }
+    .sec-divider {
+      height: 3px;
+      width: 48px;
+      background: linear-gradient(90deg, var(--sky), #6db8f7);
+      border-radius: 2px;
+      margin: 12px 0 32px;
+    }
+
+    /* ── Intro card */
+    .intro-card {
       background: var(--white);
       border: 1px solid var(--line);
       border-left: 4px solid var(--sky);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 28px 28px;
-      box-shadow: var(--shadow-sm);
-      transition: transform .25s, box-shadow .25s;
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      margin-bottom: 48px;
+      box-shadow: var(--shadow-xs);
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+    .intro-card a {
+      font-weight: 600;
+      color: var(--sky);
+      background: var(--sky-light);
+      border-radius: var(--radius-sm);
+      padding: 1px 7px;
+      border: 1px solid #c5ddf5;
+      transition: background var(--transition), color var(--transition);
+    }
+    .intro-card a:hover {
+      background: var(--sky);
+      color: var(--white);
+      text-decoration: none;
     }
 
-    .info-card:nth-child(2) { border-left-color: var(--gold); }
-    .info-card:nth-child(3) { border-left-color: #10b981; }
-
-    .info-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
+    /* ── Steps */
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .info-card-icon {
-      font-size: 22px;
-      margin-bottom: 14px;
-    }
-
-    .info-card h3 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 19px;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-
-    .info-card p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.75;
-    }
-
-    /* ── ETHICS NOTICE ── */
-    .ethics-notice {
-      margin-top: 20px;
+    .step-card {
       background: var(--white);
       border: 1px solid var(--line);
-      border-left: 4px solid var(--gold);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 28px 32px;
-      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-md);
+      padding: 22px 26px;
       display: flex;
-      gap: 16px;
+      gap: 20px;
       align-items: flex-start;
+      box-shadow: var(--shadow-xs);
+      transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Left accent stripe — mirrors pub-box border-left on homepage */
+    .step-card::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--sky) 0%, #6db8f7 100%);
+      border-radius: 4px 0 0 4px;
+    }
+    .step-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: #b8d4f0;
     }
 
-    .ethics-notice-icon {
-      width: 36px; height: 36px;
-      border-radius: 9px;
-      background: var(--gold-lt);
+    /* Step number bubble */
+    .step-num {
+      min-width: 42px; height: 42px;
+      background: var(--sky);
+      color: var(--white);
+      border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
+      font-family: 'Lora', serif;
+      font-size: 15px; font-weight: 700;
       flex-shrink: 0;
-      margin-top: 2px;
+      box-shadow: 0 4px 12px rgba(46,123,207,.28);
     }
 
-    .ethics-notice h4 {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
+    .step-body { flex: 1; }
+
+    /* Tag pill — mirrors the country badge / pub-row link on homepage */
+    .step-tag {
+      display: inline-block;
+      background: var(--sky-light);
+      color: var(--sky);
+      border: 1px solid #c5ddf5;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: .5px; text-transform: uppercase;
+      border-radius: 50px; padding: 3px 11px;
+      margin-bottom: 7px;
+    }
+    .step-title {
+      font-family: 'Lora', serif;
+      font-size: 15px; font-weight: 600; color: var(--ink);
       margin-bottom: 6px;
+      line-height: 1.35;
     }
-
-    .ethics-notice p {
+    .step-body p {
+      font-size: 13.5px;
       color: var(--muted);
-      font-size: 14px;
       line-height: 1.75;
     }
+    .step-body p strong { color: var(--ink-soft); }
 
-    /* ── FOOTER ── */
-    footer {
-      background: #f1f6fc;
-      border-top: 1px solid var(--line);
+    /* ── CTA banner — mirrors #submit section on homepage */
+    .cta-box {
+      margin-top: 56px;
+      background: linear-gradient(155deg, #e8f2fd 0%, #eef6ff 50%, #f5faff 100%);
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--sky);
+      border-radius: var(--radius-lg);
+      padding: 44px 36px;
       text-align: center;
-      padding: 36px 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .cta-box h3 {
+      font-family: 'Lora', serif;
+      font-size: 24px; font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .cta-box p {
+      font-size: 15px;
       color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .cta-box .deadline {
+      display: inline-block;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .cta-buttons {
+      display: flex; gap: 14px;
+      justify-content: center; flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    /* Reuse homepage button classes */
+    .btn {
+      display: inline-block;
+      padding: 11px 26px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px; font-weight: 600;
+      text-decoration: none;
+      letter-spacing: .2px;
+      transition: all var(--transition);
+      cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: var(--sky);
+      color: var(--white);
+    }
+    .btn-primary:hover {
+      background: #235fa0;
+      box-shadow: 0 4px 14px rgba(46,123,207,.3);
+      text-decoration: none;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--sky);
+      border: 1.5px solid var(--line);
       font-size: 13.5px;
-      line-height: 1.9;
+      padding: 11px 26px;
+    }
+    .btn-ghost:hover {
+      background: var(--sky-light);
+      border-color: var(--sky);
+      text-decoration: none;
     }
 
-    footer strong { color: var(--text); font-weight: 600; }
+    /* ═══════════════════════════════════════════════
+       FOOTER  — identical to homepage
+    ═══════════════════════════════════════════════ */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,.5);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    footer a { color: #7fbcf0; text-decoration: none; }
+    footer a:hover { color: #aad5ff; }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 860px) {
+    /* ═══════════════════════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up   { animation: fadeUp .65s ease both; }
+    .delay-1   { animation-delay: .10s; }
+    .delay-2   { animation-delay: .22s; }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
       nav { padding: 0 20px; }
       .nav-links { display: none; }
-      .process-card { padding: 24px; }
-      .process-card-header { flex-direction: column; }
-      .steps-grid { grid-template-columns: 1fr; }
-      .info-grid { grid-template-columns: 1fr; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 62px; left: 0; right: 0;
+        background: var(--white);
+        border-top: 1px solid var(--line);
+        padding: 8px 0;
+        box-shadow: var(--shadow-md);
+        z-index: 999;
+      }
+      .nav-links.open > li > a {
+        line-height: 44px;
+        padding: 0 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-links .dropdown { position: static !important; display: none !important; }
+      .step-card { flex-direction: column; gap: 12px; }
+      .main { padding: 36px 16px 56px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav>
-    <a href="index.html" class="logo">
-      <div class="logo-mark">IC</div>
-      <span class="logo-text">ICSAI <span>2026</span></span>
-    </a>
+<!-- ════════════════════════════════════════════
+     NAVBAR  — from ICSAI 2026 homepage
+════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-mark">IC</div>
+    <span class="nav-logo-text">ICSAI 2026</span>
+  </a>
 
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html#about">Home</a></li>
 
-      <li>
-        <a href="#">Committee ▾</a>
-        <div class="dropdown">
-          <a href="organizing-committee.html">Organizing Committee</a>
-          <a href="program-committee.html">Program Committee</a>
-        </div>
-      </li>
+    <li>
+      <a href="#">Committee ▾</a>
+      <div class="dropdown">
+        <a href="organizing-committee.html">Organizing Committee</a>
+      </div>
+    </li>
 
-      <li><a href="speaker.html">Speakers</a></li>
-      <li><a href="call_for_papers.html">Call For Papers</a></li>
+    <li><a href="speaker.html">Speakers</a></li>
+    <li><a href="call_for_papers.html">Call For Papers</a></li>
 
-      <li>
-        <a href="#" class="active">Submission ▾</a>
-        <div class="dropdown">
-          <a href="submission.html">Submit Paper</a>
-          <a href="download.html">Download Template</a>
-          <a href="editorial_policy.html" class="active">Editorial Policy</a>
-          <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
-        </div>
-      </li>
+    <li>
+      <a href="#" class="active">Submission ▾</a>
+      <div class="dropdown">
+        <a href="submission.html">Submit Paper</a>
+        <a href="download.html">Download Template</a>
+        <a href="editorial_policy.html" class="active">Editorial Policy</a>
+        <a href="ai_tool_guidelines.html">AI Tool Guidelines</a>
+      </div>
+    </li>
 
-      <li><a href="publication.html">Publication</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
+    <li>
+      <a href="#">Registration ▾</a>
+      <div class="dropdown">
+        <a href="register_now.html">Register Now</a>
+        <a href="program_schedule.html">Program Schedule</a>
+      </div>
+    </li>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-content">
-      <div class="hero-badge">International Conference &nbsp;·&nbsp; Ethical Publishing Standards</div>
-      <h1>Editorial <em>Policy</em></h1>
-      <p>
-        ICSAI 2026 follows a rigorous peer-review and publication ethics policy
-        to ensure originality, quality, transparency, and academic integrity.
-      </p>
-    </div>
+    <li><a href="publication.html">Publication</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="history.html">History</a></li>
+  </ul>
+
+  <div
+    class="hamburger"
+    onclick="document.getElementById('navLinks').classList.toggle('open')"
+    aria-label="Toggle menu"
+  >
+    <span></span><span></span><span></span>
   </div>
+</nav>
 
-  <!-- MAIN SECTION -->
-  <section class="main-section section-white">
-    <div class="container">
 
-      <div class="section-header">
-        <div class="section-eyebrow">Publication Standards</div>
-        <h2>Publication Ethics &amp; Review Policy</h2>
-        <p>High-quality peer review standards for international academic publications</p>
+<!-- ════════════════════════════════════════════
+     PAGE HERO
+════════════════════════════════════════════ -->
+<div class="page-hero">
+  <div class="page-hero-content">
+
+     
+
+    <h1 class="fade-up delay-1">
+      Editorial <em>Policy</em>
+    </h1>
+
+    <p class="fade-up delay-2">
+      Peer-review process for ICSAI 2026 manuscript submissions
+    </p>
+
+    <div class="hero-rule"></div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- Section header — matches homepage sec-header pattern -->
+  <p class="sec-eyebrow">Submission</p>
+  <h2 class="sec-title">Review Process Overview</h2>
+  <div class="sec-divider"></div>
+
+  <!-- Intro card -->
+   
+
+  <!-- 9-step review process -->
+  <div class="steps-list">
+
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-tag">Plagiarism Check</div>
+        <div class="step-title">Initial Plagiarism Screening</div>
+        <p>To uphold scientific integrity, one of our editors will run <strong>Turnitin</strong> on
+          each new submission to check for potential plagiarism. Papers that do not pass the
+          plagiarism check will be desk-rejected immediately.</p>
       </div>
-
-      <!-- REVIEW PROCESS -->
-      <div class="process-card">
-        <div class="process-card-header">
-          <div class="process-icon">📚</div>
-          <div class="process-card-header-text">
-            <h3>Editorial Review Process</h3>
-            <p>
-              All manuscripts submitted to ICSAI 2026 undergo a strict editorial and peer-review
-              process conducted by international experts. Papers are evaluated for originality,
-              technical quality, innovation, readability, and relevance to the conference scope.
-            </p>
-          </div>
-        </div>
-
-        <div class="steps-grid">
-
-          <div class="step-item">
-            <div class="step-number">Step 01</div>
-            <h4>Initial Submission Check</h4>
-            <p>All submitted papers are checked for formatting, plagiarism, originality, and conference scope compatibility.</p>
-          </div>
-
-          <div class="step-item">
-            <div class="step-number">Step 02</div>
-            <h4>Plagiarism Screening</h4>
-            <p>Manuscripts undergo plagiarism detection using professional similarity tools. High-similarity papers are rejected immediately.</p>
-          </div>
-
-          <div class="step-item">
-            <div class="step-number">Step 03</div>
-            <h4>Double-Blind Peer Review</h4>
-            <p>Qualified submissions are assigned to at least two independent reviewers for a double-blind review process.</p>
-          </div>
-
-          <div class="step-item">
-            <div class="step-number">Step 04</div>
-            <h4>Reviewer Evaluation</h4>
-            <p>Reviewers evaluate papers on originality, technical contribution, clarity, methodology, references, and scientific significance.</p>
-          </div>
-
-          <div class="step-item">
-            <div class="step-number">Step 05</div>
-            <h4>Revision &amp; Author Response</h4>
-            <p>Authors may be requested to revise their manuscripts according to reviewer comments and submit detailed responses.</p>
-          </div>
-
-          <div class="step-item">
-            <div class="step-number">Step 06</div>
-            <h4>Final Decision</h4>
-            <p>The editorial committee makes the final decision regarding acceptance, rejection, or further revision.</p>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- INFO CARDS -->
-      <div class="info-grid">
-
-        <div class="info-card">
-          <div class="info-card-icon">📝</div>
-          <h3>Originality Policy</h3>
-          <p>Submitted papers must contain original and unpublished research. Manuscripts currently under review elsewhere are not permitted.</p>
-        </div>
-
-        <div class="info-card">
-          <div class="info-card-icon">⚖️</div>
-          <h3>Publication Ethics</h3>
-          <p>ICSAI 2026 strictly follows international publication ethics standards and does not tolerate plagiarism, data fabrication, or duplicate submission.</p>
-        </div>
-
-        <div class="info-card">
-          <div class="info-card-icon">👤</div>
-          <h3>Author Responsibility</h3>
-          <p>Authors are fully responsible for the accuracy, authenticity, and ethical integrity of their submitted work.</p>
-        </div>
-
-      </div>
-
-      <!-- ETHICS NOTICE -->
-      <div class="ethics-notice">
-        <div class="ethics-notice-icon">⚠️</div>
-        <div>
-          <h4>Compliance Notice</h4>
-          <p>
-            Any violation of publication ethics — including plagiarism, data fabrication, authorship misrepresentation,
-            or simultaneous submission — will result in immediate rejection and may be reported to the author's institution.
-            ICSAI 2026 reserves the right to retract published papers if misconduct is discovered post-publication.
-          </p>
-        </div>
-      </div>
-
     </div>
-  </section>
 
-  <!-- FOOTER -->
-  <footer>
-    <p><strong>© 2026 International Conference on Smart Artificial Intelligence &amp; Innovation</strong></p>
-    <p>ICSAI 2026 &nbsp;·&nbsp; Nanjing, China</p>
-  </footer>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-tag">Scope Check</div>
+        <div class="step-title">Initial Editorial Check</div>
+        <p>The Publication Chairs conduct an initial check to ensure the submission falls within the
+          scope of the conference and decide whether it merits further review. Once passed, the
+          manuscript is assigned to reviewers for <strong>double-blind peer review</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-tag">Peer Review</div>
+        <div class="step-title">Expert Independent Review</div>
+        <p>Each selected submission is reviewed by at least
+          <strong>two or three independent expert reviewers</strong> on originality, validity,
+          quality, academic merit, and readability.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-tag">Evaluation</div>
+        <div class="step-title">Editorial Judgement</div>
+        <p>The peer-review reports from the experts are evaluated by one of the editors against
+          international scientific standards to determine their validity and relevance.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-tag">Author Feedback</div>
+        <div class="step-title">Review Reports Sent to Authors</div>
+        <p>Logical and valid peer-review reports are sent to the authors for revision. For reports
+          deemed invalid, the editor may assign a new reviewer or make a judgement based on their
+          own expertise.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-tag">Author Response</div>
+        <div class="step-title">Manuscript Revision</div>
+        <p>Authors are required to <strong>respond to all peer-review comments in detail</strong>
+          and revise their paper according to every point raised by the reviewers.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <div class="step-tag">Editor Review</div>
+        <div class="step-title">Revised Version Evaluation</div>
+        <p>The revised manuscript is evaluated by the editor to determine whether all points raised
+          by the reviewers have been fully and satisfactorily addressed.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">8</div>
+      <div class="step-body">
+        <div class="step-tag">Re-Review</div>
+        <div class="step-title">Reviewer Re-Evaluation</div>
+        <p>The editor returns the revised manuscript to the reviewers for a
+          <strong>second evaluation</strong> of the changes made and their adequacy.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">9</div>
+      <div class="step-body">
+        <div class="step-tag">Final Decision</div>
+        <div class="step-title">Editor-in-Chief Acceptance</div>
+        <p>If the reviewers approve the revised manuscript, the
+          <strong>Editor-in-Chief</strong> makes a final decision on acceptance for publication
+          in the conference proceedings.</p>
+      </div>
+    </div>
+
+  </div><!-- /steps-list -->
+
+  <!-- CTA — mirrors homepage #submit section -->
+   
+</main>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER  — identical to homepage
+════════════════════════════════════════════ -->
+<footer>
+  <p>Copyright &copy; 2026 International Conference on Smart Artificial Intelligence &amp; Innovation (ICSAI 2026)</p>
+  <p style="margin-top:5px;"><a href="#">www.icsai2026.org</a></p>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     HAMBURGER SCRIPT  — from homepage
+════════════════════════════════════════════ -->
+<script>
+  document.querySelector('.hamburger').addEventListener('click', function () {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+</script>
 
 </body>
 </html>
